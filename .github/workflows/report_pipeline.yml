@@ -28,6 +28,9 @@ jobs:
         id: timestamp
         run: echo "time=$(date +'%Y-%m-%d_%H-%M-%S')" >> $GITHUB_ENV
 
+      - name: Add src to PYTHONPATH
+        run: echo "PYTHONPATH=$PYTHONPATH:$(pwd)/src" >> $GITHUB_ENV
+
       - name: Run Tests
         run: |
           mkdir -p reports/${{ env.time }}/pytest reports/${{ env.time }}/behave
