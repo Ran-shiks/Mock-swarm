@@ -1,5 +1,7 @@
-name: CI Pipeline Report
+# Nome del workflow
+name: CI Pipeline
 
+# Trigger: si avvia su push o pull request verso main o develop
 on:
   push:
     branches: [ main, develop ]
@@ -7,83 +9,121 @@ on:
     branches: [ main, develop ]
 
 jobs:
+  # Primo job: Esegue build e test
   build-and-test:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Checkout del codice
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # 2. Setup di Python 3.10
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
+      # 3. Installazione delle dipendenze
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest pytest-cov coverage behave junit-xml
+          pip install -r requirements.txt
+          # Installiamo i pacchetti per i test se non sono già in requirements.txt
+          pip install pytest pytest-cov behave
 
-      - name: Generate timestamp
-        id: timestamp
-        run: echo "time=$(date +'%Y-%m-%d_%H-%M-%S')" >> $GITHUB_ENV
-
-      - name: Add src to PYTHONPATH
-        run: echo "PYTHONPATH=$PYTHONPATH:$(pwd)/src" >> $GITHUB_ENV
-
+      # 4. Esecuzione dei Test (Pytest e Behave)
       - name: Run Tests
+        id: run_tests
         run: |
-          mkdir -p reports/${{ env.time }}/pytest reports/${{ env.time }}/behave
+          # Creiamo le cartelle per i report
+          mkdir -p reports/pytest reports/behave
+          
+          # Eseguiamo pytest e salviamo il codice di uscita
           pytest tests/ \
-            --junitxml=reports/${{ env.time }}/pytest/pytest-report.xml \
+            --junitxml=reports/pytest/pytest-report.xml \
             --cov=src \
-            --cov-report=html:reports/${{ env.time }}/coverage_html \
-            --disable-warnings -q
-
+            --cov-report=html:reports/coverage_html
+          PYTEST_EXIT_CODE=$?
+            
+          # Eseguiamo behave e salviamo il codice di uscita
           behave features/ \
-            --junit -o reports/${{ env.time }}/behave/behave-report.xml \
-            -f html -o reports/${{ env.time }}/behave/behave_report.html
+            --junit -o reports/behave/behave-report.xml \
+            -f html -o reports/behave/behave_report.html
+          BEHAVE_EXIT_CODE=$?
+
+          # Facciamo fallire lo step se uno dei due test è fallito
+          if [ $PYTEST_EXIT_CODE -ne 0 ] || [ $BEHAVE_EXIT_CODE -ne 0 ]; then
+            echo "Uno dei test è fallito (pytest: $PYTEST_EXIT_CODE, behave: $BEHAVE_EXIT_CODE)"
+            exit 1
+          fi
+        # Continua anche se lo step fallisce (exit 1), per caricare i report
         continue-on-error: true
 
+      # 5. Caricamento dei report come artefatti
+      # (Utile per analizzare i fallimenti, specialmente nelle PR)
       - name: Upload Test Reports (Artifacts)
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-reports-${{ env.time }}
+          name: test-reports # MODIFICA: Usiamo un nome statico
           path: reports/${{ env.time }}
           retention-days: 7
 
   deploy-to-gh-pages:
+    # Esegui questo job solo dopo che 'build-and-test' è completato
     needs: build-and-test
-    if: needs.build-and-test.result == 'success' && github.ref == 'refs/heads/main'
-
+    # Esegui solo se il push è sul branch 'main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
     runs-on: ubuntu-latest
+    
+    # Permessi necessari per fare il push sul branch gh-pages
     permissions:
-      contents: write
+      contents: write # Obbligatorio per il push sul branch
 
     steps:
       - name: Download Artifacts
         uses: actions/download-artifact@v4
         with:
-          name: test-reports-${{ env.time }}
+          name: test-reports # MODIFICA: Usiamo lo stesso nome statico
           path: ./reports
 
       - name: Prepare Pages Directory
         run: |
+          # Creiamo una cartella temporanea che conterrà il sito
           mkdir -p ./gh-pages-site
+          
+          # Spostiamo i report HTML in questa cartella
+          # (Verifichiamo che i file esistano prima di spostarli)
           if [ -d "reports/coverage_html" ]; then
             mv reports/coverage_html ./gh-pages-site/coverage
           fi
           if [ -f "reports/behave/behave_report.html" ]; then
             mv reports/behave/behave_report.html ./gh-pages-site/behave_report.html
           fi
-          echo '<html><head><title>Test Reports</title><meta charset="UTF-8"></head><body style="font-family:sans-serif;padding:20px;"><h1>Test Reports</h1><ul><li><a href="behave_report.html">Behave Test Report</a></li><li><a href="coverage/index.html">Pytest Coverage Report</a></li></ul></body></html>' > ./gh-pages-site/index.html
+          
+          # Crea un semplice file index.html per navigare i report
+          echo '<html>' > ./gh-pages-site/index.html
+          echo '<head><title>Test Reports</title><meta charset="UTF-8"></head>' >> ./gh-pages-site/index.html
+          echo '<body style="font-family: sans-serif; padding: 20px;">' >> ./gh-pages-site/index.html
+          echo '<h1>Test Reports</h1>' >> ./gh-pages-site/index.html
+          echo '<ul>' >> ./gh-pages-site/index.html
+          echo '<li><a href="behave_report.html">Behave Test Report</a></li>' >> ./gh-pages-site/index.html
+          echo '<li><a href="coverage/index.html">Pytest Coverage Report</a></li>' >> ./gh-pages-site/index.html
+          echo '</ul>' >> ./gh-pages-site/index.html
+          echo '</body></html>' >> ./gh-pages-site/index.html
 
+      # 3. Esegui il deploy sul branch 'gh-pages'
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
         with:
+          # Il token per autenticarsi e fare il push
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          # Il branch su cui pubblicare
           publish_branch: gh-pages
+          # La cartella che contiene i file da pubblicare
           publish_dir: ./gh-pages-site
+          # Un utente e email per il commit
           user_name: 'github-actions[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
