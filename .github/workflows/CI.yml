@@ -25,6 +25,9 @@ jobs:
           pip install -r requirements.txt
           # In caso non siano nel requirements:
           pip install pytest behave
+      
+      - name: Add src to PYTHONPATH
+        run: echo "PYTHONPATH=$PYTHONPATH:$(pwd)/src" >> $GITHUB_ENV
 
       - name: Run unit tests
         run: |
