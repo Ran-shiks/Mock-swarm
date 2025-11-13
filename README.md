@@ -1,2 +1,29 @@
-# Mock-swarm
-Mock Data Generator based on scheme
+Ecco una descrizione completa e professionale per il **README.md** del progetto *Schema-Driven Mock Data Generator*:
+
+---
+
+# 🧩 Schema-Driven Mock Data Generator
+
+> Un generatore di dati fittizi **intelligente** e **basato su schema**, progettato per creare mock data **validi e realistici** a partire da definizioni di modelli (JSON Schema, OpenAPI, classi, ecc.).
+
+---
+
+## 🚀 Introduzione
+
+Quando si sviluppano **API**, si scrivono **test automatici** o si creano **prototipi**, servono dati realistici.
+Scriverli a mano è noioso e soggetto a errori, mentre generarli in modo casuale raramente rispetta i vincoli del modello (es. un campo `email` deve sembrare davvero un’email).
+
+**Schema-Driven Mock Data Generator** risolve questo problema:
+analizza automaticamente lo **schema di input** e genera dati **coerenti e validi**, pronti per essere usati in test, mock server o ambienti di sviluppo.
+
+---
+
+## 📦 Possibili Estensioni Future
+
+* Supporto diretto a **classi Python**, **Java** o **TypeScript**
+* Generazione basata su **OpenAPI endpoints**
+* Mock di **relazioni tra oggetti** (es. `User` → `Address`)
+* Integrazione con **Faker** o librerie di dati sintetici
+* Interfaccia **web o GUI**
+
+---
