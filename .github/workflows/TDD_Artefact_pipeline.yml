@@ -1,4 +1,4 @@
-name: CI Pipeline with Allure Reports
+name: CI Pipeline
 
 on:
   push:
@@ -23,30 +23,30 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pytest behave allure-behave allure-pytest
+          pip install allure-behave allure-pytest
 
       - name: Add src to PYTHONPATH
         run: echo "PYTHONPATH=$PYTHONPATH:$(pwd)/src" >> $GITHUB_ENV
 
-      - name: Run pytest
-        run: pytest tests/ --maxfail=1 --disable-warnings -q --cov=src --cov-report=xml
-        continue-on-error: true
+      - name: Run unit tests
+        run: pytest --maxfail=1 --disable-warnings -q
 
-      - name: Run behave
-        if: always()
+      - name: Run BDD tests with Behave
+        run: behave -f allure_behave.formatter:AllureFormatter -o allure-results
+
+      - name: Generate timestamp for report
+        id: timestamp
+        run: echo "time=$(date +'%Y-%m-%d_%H-%M-%S')" >> $GITHUB_ENV
+
+      - name: Generate Allure HTML report (versioned)
         run: |
-          mkdir -p reports
-          if [ -d allure-results ] && [ "$(ls -A allure-results)" ]; then
-            allure generate allure-results --clean -o reports/allure-report
-          else
-            echo "No allure-results found, skipping report generation."
-          fi
-          mkdir -p reports
-          allure generate allure-results --clean -o reports/allure-report
+          mkdir -p reports/allure-report/${{ env.time }}
+          allure generate allure-results --clean -o reports/allure-report/${{ env.time }}
 
-      - name: Upload Allure Report artifact
+      - name: Upload Allure Report as Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: allure-report
-          path: reports/allure-report
+          name: allure-report-${{ env.time }}
+          path: reports/allure-report/${{ env.time }}
+
 
