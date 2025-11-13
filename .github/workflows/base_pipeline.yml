@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build-and-test:
+  base_pipeline:
     runs-on: ubuntu-latest
 
     steps:
