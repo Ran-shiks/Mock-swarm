@@ -28,16 +28,19 @@ jobs:
       - name: Add src to PYTHONPATH
         run: echo "PYTHONPATH=$PYTHONPATH:$(pwd)/src" >> $GITHUB_ENV
 
-      - name: Run unit tests
-        run: pytest --maxfail=1 --disable-warnings -q
-        continue-on-error: true
-
-      - name: Run BDD tests with Behave
-        run: behave -f allure_behave.formatter:AllureFormatter -o allure-results
-
       - name: Generate timestamp for report
         id: timestamp
         run: echo "time=$(date +'%Y-%m-%d_%H-%M-%S')" >> $GITHUB_ENV
+
+      - name: Run unit tests (pytest) and save JUnit results
+        run: |
+          mkdir -p reports/junit/${{ env.time }}
+          pytest --maxfail=1 --disable-warnings -q --junitxml=reports/junit/${{ env.time }}/pytest.xml
+
+      - name: Run BDD tests with Behave (Allure results)
+        run: |
+          mkdir -p reports/allure-results/${{ env.time }}
+          behave -f allure_behave.formatter:AllureFormatter -o reports/allure-results/${{ env.time }}
 
       - name: Install Allure CLI
         run: |
@@ -51,7 +54,7 @@ jobs:
         if: always()
         run: |
           mkdir -p reports/allure-report/${{ env.time }}
-          allure generate allure-results --clean -o reports/allure-report/${{ env.time }}
+          allure generate reports/allure-results/${{ env.time }} --clean -o reports/allure-report/${{ env.time }}
 
       - name: Upload Allure Report as Artifact
         if: always()
