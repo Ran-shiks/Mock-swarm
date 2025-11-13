@@ -1,0 +1,48 @@
+name: Python CI
+
+# Trigger della pipeline
+on:
+  push:
+    branches: [ "main" ]
+    tags:
+      - 'v*.*.*'  # Si attiva anche per i tag, es. v1.0.0
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  # --- 1. JOB DI CONTINUOUS INTEGRATION (CI) ---
+  build-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # Testa su più versioni di Python
+        python-version: ["3.9", "3.10", "3.11"]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip' # Abilita la cache per velocizzare le installazioni
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          # Installa i tool di sviluppo
+          pip install pytest mypy safety
+
+      - name: Check types with MyPy
+        run: |
+          mypy application/
+
+      - name: Scan dependencies for vulnerabilities
+        run: |
+          safety check -r requirements.txt
+
+      - name: Test with pytest
+        run: |
+          python -m pytest
