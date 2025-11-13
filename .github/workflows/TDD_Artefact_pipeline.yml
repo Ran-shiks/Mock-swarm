@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: CI Pipeline with Allure Reports
 
 on:
   push:
@@ -23,25 +23,15 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          # In caso non siano nel requirements:
-          pip install pytest behave
-      
+          pip install pytest behave allure-behave allure-pytest
+
       - name: Add src to PYTHONPATH
         run: echo "PYTHONPATH=$PYTHONPATH:$(pwd)/src" >> $GITHUB_ENV
 
-      - name: Run unit tests
+      - name: Run tests
         run: |
           pytest --maxfail=1 --disable-warnings -q
-
-      - name: Run behave (allow failure)
-        run: | 
-          behave --format progress --no-summary || true
-
-
-      - name: Test with pytest
-        run: |
-          python -m pytest
-
+          behave -f allure_behave.formatter:AllureFormatter -o allure-results
 
       - name: Generate Allure HTML report in repo
         run: |
@@ -53,3 +43,4 @@ jobs:
         with:
           name: allure-report
           path: reports/allure-report
+
