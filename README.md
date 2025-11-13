@@ -1,7 +1,3 @@
-Ecco una descrizione completa e professionale per il **README.md** del progetto *Schema-Driven Mock Data Generator*:
-
----
-
 # 🧩 Schema-Driven Mock Data Generator
 
 > Un generatore di dati fittizi **intelligente** e **basato su schema**, progettato per creare mock data **validi e realistici** a partire da definizioni di modelli (JSON Schema, OpenAPI, classi, ecc.).
