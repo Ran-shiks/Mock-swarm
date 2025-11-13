@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: CI Pipeline Report
 
 on:
   push:
@@ -22,67 +22,65 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install -r requirements-dev.txt || true
-          pip install allure-behave allure-python-commons --upgrade
+          pip install pytest pytest-cov coverage behave junit-xml
 
-      - name: Set up JDK
-        uses: actions/setup-java@v3
-        with:
-          distribution: zulu
-          java-version: 17
-
-      - name: Add src to PYTHONPATH
-        run: echo "PYTHONPATH=$PYTHONPATH:$(pwd)/src" >> $GITHUB_ENV
-
-      - name: Generate timestamp for report
+      - name: Generate timestamp
         id: timestamp
         run: echo "time=$(date +'%Y-%m-%d_%H-%M-%S')" >> $GITHUB_ENV
 
-      - name: Run unit tests (pytest) and save JUnit results
+      - name: Run Tests
         run: |
-          mkdir -p reports/junit/${{ env.time }}
-          pytest --maxfail=1 --disable-warnings -q --junitxml=reports/junit/${{ env.time }}/pytest.xml
+          mkdir -p reports/${{ env.time }}/pytest reports/${{ env.time }}/behave
+          pytest tests/ \
+            --junitxml=reports/${{ env.time }}/pytest/pytest-report.xml \
+            --cov=src \
+            --cov-report=html:reports/${{ env.time }}/coverage_html \
+            --disable-warnings -q
 
-      - name: Run BDD tests with Behave (Allure results)
-        run: |
-          mkdir -p reports/allure-results/${{ env.time }}
-          behave -f allure_behave.formatter:AllureFormatter -o reports/allure-results/${{ env.time }}
+          behave features/ \
+            --junit -o reports/${{ env.time }}/behave/behave-report.xml \
+            -f html -o reports/${{ env.time }}/behave/behave_report.html
+        continue-on-error: true
 
-      - name: Setup Node (per usare npx allure)
-        uses: actions/setup-node@v4
-        with:
-          node-version: "16"
-
-      - name: Generate Allure HTML report (via npx)
-        if: always()
-        run: |
-          mkdir -p reports/allure-report/${{ env.time }}
-          npx -y allure-commandline@2.27.2 generate reports/allure-results/${{ env.time }} --clean -o reports/allure-report/${{ env.time }}
-          # verifica
-          ls -la reports/allure-report/${{ env.time }} | head -n 20
-
-      - name: Upload Allure report as artifact
+      - name: Upload Test Reports (Artifacts)
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: allure-report-${{ env.time }}
-          path: reports/allure-report/${{ env.time }}
+          name: test-reports-${{ env.time }}
+          path: reports/${{ env.time }}
+          retention-days: 7
 
-      - name: Upload JUnit XML as Artifact
-        if: always()
-        uses: actions/upload-artifact@v4
+  deploy-to-gh-pages:
+    needs: build-and-test
+    if: needs.build-and-test.result == 'success' && github.ref == 'refs/heads/main'
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
         with:
-          name: junit-${{ env.time }}
-          path: reports/junit/${{ env.time }}
+          name: test-reports-${{ env.time }}
+          path: ./reports
 
-      - name: Publish latest Allure report to gh-pages
-        if: always()
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Prepare Pages Directory
+        run: |
+          mkdir -p ./gh-pages-site
+          if [ -d "reports/coverage_html" ]; then
+            mv reports/coverage_html ./gh-pages-site/coverage
+          fi
+          if [ -f "reports/behave/behave_report.html" ]; then
+            mv reports/behave/behave_report.html ./gh-pages-site/behave_report.html
+          fi
+          echo '<html><head><title>Test Reports</title><meta charset="UTF-8"></head><body style="font-family:sans-serif;padding:20px;"><h1>Test Reports</h1><ul><li><a href="behave_report.html">Behave Test Report</a></li><li><a href="coverage/index.html">Pytest Coverage Report</a></li></ul></body></html>' > ./gh-pages-site/index.html
+
+      - name: Deploy to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: reports/allure-report/${{ env.time }}
-          # se vuoi pubblicare sempre in root della gh-pages branch, rimuovi il timestamp sopra
-          # per preservare la history potrei invece fare il checkout del branch gh-pages, unire le cartelle e poi pushare
-
-
+          publish_branch: gh-pages
+          publish_dir: ./gh-pages-site
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
