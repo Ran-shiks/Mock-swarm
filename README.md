@@ -1,7 +1,5 @@
 # 🧩 Schema-Driven Mock Data Generator
 
-![CI Pipeline](https://github.com/Ran-shiks/Mock-swarm/actions/workflows/CI.yml/badge.svg)
-
 
 > Un generatore di dati fittizi **intelligente** e **basato su schema**, progettato per creare mock data **validi e realistici** a partire da definizioni di modelli (JSON Schema, OpenAPI, classi, ecc.).
 
