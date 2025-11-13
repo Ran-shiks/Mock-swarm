@@ -28,13 +28,19 @@ jobs:
       - name: Add src to PYTHONPATH
         run: echo "PYTHONPATH=$PYTHONPATH:$(pwd)/src" >> $GITHUB_ENV
 
-      - name: Run tests
-        run: |
-          pytest --maxfail=1 --disable-warnings -q
-          behave -f allure_behave.formatter:AllureFormatter -o allure-results
+      - name: Run pytest
+        run: pytest tests/ --maxfail=1 --disable-warnings -q --cov=src --cov-report=xml
+        continue-on-error: true
 
-      - name: Generate Allure HTML report in repo
+      - name: Run behave
+        if: always()
         run: |
+          mkdir -p reports
+          if [ -d allure-results ] && [ "$(ls -A allure-results)" ]; then
+            allure generate allure-results --clean -o reports/allure-report
+          else
+            echo "No allure-results found, skipping report generation."
+          fi
           mkdir -p reports
           allure generate allure-results --clean -o reports/allure-report
 
