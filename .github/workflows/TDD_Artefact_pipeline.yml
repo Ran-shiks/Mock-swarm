@@ -38,6 +38,11 @@ jobs:
         id: timestamp
         run: echo "time=$(date +'%Y-%m-%d_%H-%M-%S')" >> $GITHUB_ENV
 
+      - name: Install Allure CLI
+        uses: simple-elf/allure-report-action@v1.7
+        with:
+          install-only: true
+
       - name: Generate Allure HTML report (versioned)
         run: |
           mkdir -p reports/allure-report/${{ env.time }}
