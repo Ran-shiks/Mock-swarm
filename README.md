@@ -23,3 +23,20 @@ analizza automaticamente lo **schema di input** e genera dati **coerenti e valid
 * Interfaccia **web o GUI**
 
 ---
+
+## Struttura Esempio di Progetto
+.
+├── src/
+│   ├── mockgen/
+│   ├── generators/
+│   └── ...
+├── tests/
+│   └── test_generators.py
+├── features/                 ← cartella per i test behave
+│   ├── schema_generation.feature
+│   └── steps/
+│       └── test_schema_steps.py
+├── requirements.txt
+└── .github/
+    └── workflows/
+        └── ci.yml
