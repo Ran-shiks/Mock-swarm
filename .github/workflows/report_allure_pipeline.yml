@@ -60,19 +60,27 @@ jobs:
         - name: Checkout repo
           uses: actions/checkout@v4
 
+        - name: Set up JDK
+          uses: actions/setup-java@v3
+          with:
+            distribution: zulu
+            java-version: 17
+        
         - name: Get Allure history
           uses: actions/checkout@v4
+          if: always()
           continue-on-error: true
           with:
             ref: gh-pages
             path: gh-pages
 
-        - name: Allure Report action from repo
-          uses: ./
+        - name: Build test report
+          uses: simple-elf/allure-report-action@v1.7
+          if: always()
           with:
-            allure_results: allure-results
+            gh_pages: gh-pages
             allure_history: allure-history
-            keep_reports: 20
+            allure_results: allure-results
 
         - name: Deploy report to Github Pages
           uses: peaceiris/actions-gh-pages@v4
