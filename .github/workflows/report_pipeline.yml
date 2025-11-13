@@ -23,7 +23,14 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install -r requirements-dev.txt
+          pip install -r requirements-dev.txt || true
+          pip install allure-behave allure-python-commons --upgrade
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: zulu
+          java-version: 17
 
       - name: Add src to PYTHONPATH
         run: echo "PYTHONPATH=$PYTHONPATH:$(pwd)/src" >> $GITHUB_ENV
@@ -42,27 +49,40 @@ jobs:
           mkdir -p reports/allure-results/${{ env.time }}
           behave -f allure_behave.formatter:AllureFormatter -o reports/allure-results/${{ env.time }}
 
-      - name: Setup Node (per installare allure-cli)
+      - name: Setup Node (per usare npx allure)
         uses: actions/setup-node@v4
         with:
           node-version: "16"
 
-      - name: Install Allure CLI (npm)
-        run: |
-          npm install -g allure-commandline@2.27.2 --no-audit --no-fund
-          allure --version
-
-      - name: Generate Allure HTML report (versioned)
+      - name: Generate Allure HTML report (via npx)
         if: always()
         run: |
           mkdir -p reports/allure-report/${{ env.time }}
-          allure generate reports/allure-results/${{ env.time }} --clean -o reports/allure-report/${{ env.time }}
+          npx -y allure-commandline@2.27.2 generate reports/allure-results/${{ env.time }} --clean -o reports/allure-report/${{ env.time }}
+          # verifica
+          ls -la reports/allure-report/${{ env.time }} | head -n 20
 
-      - name: Upload Allure Report as Artifact
+      - name: Upload Allure report as artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: allure-report-${{ env.time }}
           path: reports/allure-report/${{ env.time }}
+
+      - name: Upload JUnit XML as Artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-${{ env.time }}
+          path: reports/junit/${{ env.time }}
+
+      - name: Publish latest Allure report to gh-pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: reports/allure-report/${{ env.time }}
+          # se vuoi pubblicare sempre in root della gh-pages branch, rimuovi il timestamp sopra
+          # per preservare la history potrei invece fare il checkout del branch gh-pages, unire le cartelle e poi pushare
 
 
