@@ -42,13 +42,15 @@ jobs:
           mkdir -p reports/allure-results/${{ env.time }}
           behave -f allure_behave.formatter:AllureFormatter -o reports/allure-results/${{ env.time }}
 
-      - name: Install Allure CLI
+      - name: Setup Node (per installare allure-cli)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "16"
+
+      - name: Install Allure CLI (npm)
         run: |
-          sudo apt-get update
-          sudo apt-get install -y unzip wget default-jre
-          wget https://github.com/allure-framework/allure2/releases/download/2.27.2/allure-2.27.2.zip
-          unzip -o allure-2.27.2.zip -d $HOME/allure
-          echo "$HOME/allure/allure-2.27.2/bin" >> $GITHUB_PATH
+          npm install -g allure-commandline@2.27.2 --no-audit --no-fund
+          allure --version
 
       - name: Generate Allure HTML report (versioned)
         if: always()
