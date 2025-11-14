@@ -1,1 +1,1 @@
-{"uid":"ab17fc5a4eb3bca4b216b548c7f9fcbc","children":[],"name":"timeline"}
+{"uid":"ab17fc5a4eb3bca4b216b548c7f9fcbc","children":[{"name":"Calcolare la somma corretta","uid":"89c2787a2e4d01af","parentUid":"ab17fc5a4eb3bca4b216b548c7f9fcbc","status":"passed","time":{"start":1763134921399,"stop":1763134921400,"duration":1},"flaky":false,"newFailed":false,"newPassed":false,"newBroken":false,"retriesCount":0,"retriesStatusChange":false,"parameters":[],"tags":[]}],"name":"timeline"}
