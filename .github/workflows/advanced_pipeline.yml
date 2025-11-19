@@ -1,3 +1,19 @@
+# Usefull Links for reference:
+# Allure reports withbehave and pytest
+# https://github.com/allure-examples/allure-examples/tree/master/allure-python/.github/workflows
+#
+# Deploy action
+# https://github.com/actions/deploy-pages
+# Building and testing Python
+# https://docs.github.com/en/actions/tutorials/build-and-test-code/python
+# Using custom workflows with GitHub Pages
+# https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages
+# Allure report 
+# https://allurereport.org/docs/integrations-github/#_3-set-up-publishing-github-pages
+
+# Other
+# https://shinesolutions.com/2024/12/17/generate-allure-reports-from-sharding-in-playwright-using-github-actions
+
 name: Advanced CI Pipeline with Allure Reporting
 
 on:
@@ -25,9 +41,12 @@ jobs:
                 python -m pip install --upgrade pip
                 pip install -r requirements.txt
             
+            - name: Add src to PYTHONPATH
+              run: echo "PYTHONPATH=$PYTHONPATH:$(pwd)/src" >> $GITHUB_ENV
+            
             - name: Run Test
               if: always()
-              run: pytest --alluredir=allure-results
+              run: PYTHONPATH="$(pwd)" pytest --alluredir=allure-results
               continue-on-error: true
 
             - name: Get Allure history
