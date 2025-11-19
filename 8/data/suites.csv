@@ -1,0 +1,2 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"Verifica che la funzione add sommi correttamente due numeri.","0","test_addition","tests","Wed Nov 19 09:39:18 UTC 2025","passed","Wed Nov 19 09:39:18 UTC 2025","","test_test_pipeline","",""
