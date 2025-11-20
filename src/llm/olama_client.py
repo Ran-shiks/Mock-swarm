@@ -1,176 +1,127 @@
 import os
 import json
-import requests
-import random
 from typing import List, Optional, Any
 
+import requests
 
-OLLAMA = os.getenv("OLLAMA", "http://127.0.0.1:11434")
-LLM_MODEL = os.getenv("LLM_MODEL", "gemma3")
-
+#guys, per funzionare abbiamo olama in locale che runna a questo indirizzo
+OLLAMA_HOST = os.getenv("OLLAMA_HOST", "127.0.0.1")
+OLLAMA_PORT = os.getenv("OLLAMA_PORT", "11434")
+LLM_MODEL = os.getenv("LLM_MODEL", "llama3") # questo è il modello che usiamo, abbastanza pesantuccio, circa 5g
 
 class OlamaClient:
     """
-    Client minimale per interagire con un server Olama/OLLAMA locale.
-
-    Fornisce un metodo `generate_mock` che richiede al modello di restituire
-    esattamente `n` record JSON con i campi richiesti (nome, cognome, ecc.).
+    Client ottimizzato per interagire con un server Ollama locale.
+    Prioritizza l'uso della libreria ollama-python con output JSON forzato.
     """
 
-    def __init__(self, model: Optional[str] = None, host: str = "127.0.0.1", port: int = 11434):
+    def __init__(self, model: Optional[str] = None, host: str = OLLAMA_HOST, port: str = OLLAMA_PORT):
         self.model = model or LLM_MODEL
-        self.host = host
-        self.port = port
-        self.base_url = f"http://{self.host}:{self.port}"
+        self.base_url = f"http://{host}:{port}"
+        # Se la libreria ollama è disponibile, la inizializziamo
+        try:
+            import ollama
+            self.ollama_client = ollama.Client(host=self.base_url)
+        except ImportError:
+            self.ollama_client = None
+            print("Attenzione: La libreria 'ollama' non è installata. Il client non funzionerà.")
 
-    def set_model(self, model: str):
-        self.model = model
 
     def _build_prompt(self, fields: List[str], n: int, extra_instructions: Optional[str] = None) -> str:
         """
-        Costruisce un prompt che ordina al modello di restituire esattamente un array JSON.
-        Il prompt richiede: nessun testo aggiuntivo, solo JSON valido.
+        qua bisogna dare il prompt preciso al modello per fargli restituire esattamente un array JSON
+        con n oggetti, ciascuno con i campi specificati in fields.se vogliamo possia anche dire di generare piu
         """
         fields_list = ", ".join(fields)
+        # Istruzioni molto specifiche per l'output JSON
         instr = (
-            f"Genera esattamente {n} oggetti JSON come un array. "
-            f"Ogni oggetto deve avere questi campi: {fields_list}. "
-            "Restituisci SOLO il JSON, senza testo descrittivo aggiuntivo. "
-            "Per i valori, fornisci contenuti realistici (nomi, cognomi, generi, film, descrizioni, ecc.)."
+            "Sei un generatore di dati mock. Ignora qualsiasi testo o introduzione. "
+            f"Il tuo unico compito è generare ESATTAMENTE un array JSON contenente {n} oggetti. "
+            "Ogni oggetto deve avere TUTTI i seguenti campi: "
+            f"{fields_list}. "
+            "Fornisci valori realistici e coerenti per tutti i campi. "
+            "L'output DEVE essere solo l'array JSON."
         )
         if extra_instructions:
             instr += " " + extra_instructions
-        instr += "\nEsempio di output valido (per 2 elementi):\n[{\"nome\": \"Mario\", \"cognome\": \"Rossi\"}, {\"nome\": \"Anna\", \"cognome\": \"Bianchi\"}]"
+        
+        # Aggiungiamo un esempio nel prompt di sistema per rafforzare la struttura
+        instr += f"\nEsempio di output valido (per 2 elementi):\n[{{\"{fields[0]}\": \"Valore1\", \"{fields[1]}\": \"Valore2\"}}, ...]"
         return instr
 
-    def generate_mock(self, n: int, fields: List[str], extra_instructions: Optional[str] = None, temperature: float = 0.0, retries: int = 0) -> List[Any]:
-        """
-        Richiede al modello di generare `n` record di mock contenenti i `fields` richiesti.
 
-        Ritorna una lista di dizionari (se il modello restituisce JSON valido),
-        altrimenti una lista vuota e una stringa d'errore nell'eccezione.
+    def generate_mock(self, n: int, fields: List[str], extra_instructions: Optional[str] = None, temperature: float = 0.6) -> List[Any]:
         """
-        if not self.model:
-            raise ValueError("Model not set. Use set_model() or provide LLM_MODEL env var.")
-        prompt = self._build_prompt(fields, n, extra_instructions)
-        # Try multiple common endpoints for Ollama/OLLAMA HTTP API, because installs/versions differ
-        endpoints = [
-            "/api/generate",
-            "/api/chat",
-            "/v1/generate",
-            "/v1/chat/completions",
-            "/api/completions",
-        ]
-        payload = {
-            "model": self.model,
-            "prompt": prompt,
-            "temperature": temperature,
-            "max_tokens": 1000,
-        }
-        attempt = 0
-        last_err = None
-
-        # First try using the ollama Python client if available (some setups prefer this)
+        Richiede al modello di generare `n` record di mock in formato JSON.
+        """
+       
+        system_prompt = self._build_prompt(fields, n, extra_instructions)
+        
         try:
-            import ollama
-            try:
-                client = ollama.Client()
-                # Try chat/generate using client if provided
-                # The API of ollama.Client may differ; we try to be conservative
-                try:
-                    # Some versions support client.chat
-                    res_iter = client.chat(self.model, messages=[{"role": "user", "content": prompt}], stream=False)
-                    # res_iter could be an iterator or a single response
-                    if hasattr(res_iter, '__iter__') and not isinstance(res_iter, (str, bytes)):
-                        # take last chunk with content
-                        text = None
-                        for chunk in res_iter:
-                            if hasattr(chunk, 'message') and getattr(chunk.message, 'content', None):
-                                text = chunk.message.content
-                        if text is None:
-                            text = str(res_iter)
-                    else:
-                        text = str(res_iter)
-                    parsed = json.loads(text)
-                    if isinstance(parsed, list) and len(parsed) == n:
-                        return parsed
-                except Exception:
-                    # Try client.generate if available
-                    try:
-                        gen = client.generate(self.model, prompt)
-                        text = getattr(gen, 'content', None) or str(gen)
-                        parsed = json.loads(text)
-                        if isinstance(parsed, list) and len(parsed) == n:
-                            return parsed
-                    except Exception:
-                        pass
-            except Exception:
-                pass
-        except Exception:
-            # ollama client not available or failed - continue with HTTP attempts
-            pass
+            # Chiamata all'API di Ollama utilizzando 'generate'
+            response = self.ollama_client.generate(
+                model=self.model,
+                # Forziamo il modello a produrre JSON
+                format='json', 
+                # Il prompt di sistema è cruciale per la struttura
+                system=system_prompt,
+                # Il prompt dell'utente è spesso solo un attivatore
+                prompt="Inizia la generazione del JSON.", 
+                options={'temperature': temperature, 'num_predict': 4096} # Aumenta num_predict
+            )
+            
+            # Ollama wrap il risultato nella chiave 'response'
+            text = response.get('response', '')
+            
+            # Se la risposta è vuota o il modello ha avuto problemi
+            if not text.strip():
+                 raise ValueError("Il modello ha restituito una stringa JSON vuota.")
 
-        # If client didn't work, try HTTP endpoints
-        while attempt <= retries:
-            attempt += 1
-            for ep in endpoints:
-                url = f"{self.base_url}{ep}"
-                try:
-                    resp = requests.post(url, json=payload, timeout=30)
-                    resp.raise_for_status()
+            # Parsa il testo in JSON
+            parsed = json.loads(text)
+            
+            # Validazione finale
+            if isinstance(parsed, list) and len(parsed) == n:
+                return parsed
+            elif isinstance(parsed, dict) and len(parsed) == n:
+                 # Alcuni modelli potrebbero restituire un dict anziché una lista root
+                 return list(parsed.values()) 
+            else:
+                raise ValueError(f"Output JSON malformato o con numero errato di elementi. Trovato: {type(parsed)} con {len(parsed)} elementi (attesi {n}).")
 
-                    # Olama/OLLAMA può rispondere in diversi formati. Cerchiamo la chiave "response" prima,
-                    # poi tentiamo di parsare il testo in JSON.
-                    try:
-                        j = resp.json()
-                    except ValueError:
-                        # Not JSON: try to parse text
-                        text = resp.text.strip()
-                        parsed = json.loads(text)
-                        if not isinstance(parsed, list):
-                            raise ValueError("Output JSON non è una lista")
-                        if len(parsed) != n:
-                            raise ValueError(f"Output contiene {len(parsed)} elementi, attesi {n}")
-                        return parsed
-
-                    # If API wraps the content in a field
-                    if isinstance(j, dict) and "response" in j:
-                        content = j["response"]
-                        # content could itself be JSON string
-                        if isinstance(content, (list, dict)):
-                            parsed = content if isinstance(content, list) else [content]
-                        else:
-                            parsed = json.loads(content)
-                    elif isinstance(j, list):
-                        parsed = j
-                    else:
-                        # Try to parse raw text as fallback
-                        parsed = json.loads(resp.text)
-
-                    if not isinstance(parsed, list):
-                        raise ValueError("Output JSON non è una lista")
-                    if len(parsed) != n:
-                        raise ValueError(f"Output contiene {len(parsed)} elementi, attesi {n}")
-                    return parsed
-
-                except Exception as e:
-                    last_err = e
-                    # try next endpoint
-                    continue
-            # after trying all endpoints for this attempt, if none returned, either retry or break
-            if attempt > retries:
-                break
-            # otherwise retry loop continues
-        # unreachable but for typing
-        raise RuntimeError(f"Errore nella richiesta a Olama: {last_err}")
+        except requests.exceptions.HTTPError as http_err:
+            raise RuntimeError(f"Errore nella richiesta a Ollama. Assicurati che il modello '{self.model}' sia scaricato (ollama pull {self.model}) e il server sia attivo: {http_err}")
+        except json.JSONDecodeError as json_err:
+            # Questo è l'errore più comune se l'LLM non aderisce al JSON
+            print(f"--- OUTPUT GREZZO FALLITO ---:\n{text}\n--- FINE ---")
+            raise RuntimeError(f"Errore nel parsing JSON dall'output del modello. L'LLM non ha fornito JSON valido: {json_err}")
+        except Exception as e:
+            raise RuntimeError(f"Errore di generazione non gestito: {e}")
 
 
 if __name__ == "__main__":
-    # Esempio d'uso rapido: genera 5 record con campi tipici richiesti dagli sviluppatori
+    # --- Esempio d'uso ---
     client = OlamaClient()
-    fields = ["nome", "cognome", "sesso", "film_preferito", "descrizione"]
+    
+    # Definisci lo schema richiesto
+    fields = ["nome_utente", "email", "ruolo_azienda", "data_iscrizione", "stato_attivo"]
+    
+    # Istruzioni aggiuntive per rendere i dati più realistici
+    istruzioni_extra = (
+        "Genera nomi utente realistici e coerenti con le email. "
+        "Le email devono essere uniche e seguire il formato standard. "
+        "I ruoli aziendali devono essere scelti tra: 'Amministratore', 'Utente', 'Ospite'. "
+        "Le date di iscrizione devono essere comprese tra il 2015 e il 2024. "
+        "Lo stato attivo deve essere 'vero' o 'falso' con una distribuzione del 70% vero e 30% falso."
+    )
+    N_RECORDS = 5
+    
+    print(f"Tentativo di generare {N_RECORDS} record mock con il modello '{client.model}'...")
+    
     try:
-        records = client.generate_mock(5, fields, extra_instructions="Usa generi e film contemporanei.")
+        records = client.generate_mock(N_RECORDS, fields, extra_instructions=istruzioni_extra)
+        print("\n✅ GENERAZIONE RIUSCITA!")
         print(json.dumps(records, indent=2, ensure_ascii=False))
-    except Exception as exc:
-        print("Errore durante la generazione dei mock:", exc)
+    except RuntimeError as exc:
+        print("\n❌ ERRORE CRITICO:")
+        print(exc)
