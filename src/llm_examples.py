@@ -5,6 +5,12 @@ Questo file mostra come utilizzare le classi LLM per inizializzare
 e utilizzare Llama (o altri modelli) nel progetto.
 """
 
+import sys
+import os
+
+# Aggiungi il percorso del progetto al PYTHONPATH
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from src.llm import LlamaLLM, LLMFactory
 
 # ==============================================================================
