@@ -4,7 +4,8 @@
 import json
 import os
 from typing import Any, Dict
-
+from jsonschema import validate, ValidationError
+from jsonschema.validators import validator_for
 
 
 class SchemaParser:
@@ -31,10 +32,14 @@ class SchemaParser:
 
     def _validate_structure(self, schema: Dict[str, Any]):
 
+        try:
+            cls = validator_for(schema)
+            cls.check_schema(schema)
+        except ValidationError as e:
+            raise SchemaError(f"Lo schema fornito non è valido secondo le specifiche JSON Schema: {e.message}")
+        except Exception as e:
+            raise SchemaError(f"Errore imprevisto nella validazione dello schema: {str(e)}")    
 
-
-        return True
-    
 
 class SchemaError(Exception):
     """Eccezione"""
