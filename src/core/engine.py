@@ -83,3 +83,30 @@ class MockGenEngine:
         implementiamo la cartella /generators.
         """
         return {"id": index, "mock": "data", "info": "Generators not implemented yet"}
+
+
+'''
+
+    # Aggiorna il metodo _get_generator_strategy
+    def _get_generator_strategy(self, use_ai: bool, seed: Optional[int]):
+        if use_ai:
+            return SmartGenerator() # In futuro passeremo config
+        else:
+            return AlgorithmicGenerator(seed=seed)
+
+    # Aggiorna il metodo generate rimuovendo il _mock_generation
+    def generate(self, count: int = 1, use_ai: bool = False, ai_prompt: Optional[str] = None, seed: Optional[int] = None) -> List[Dict[str, Any]]:
+        generator = self._get_generator_strategy(use_ai, seed)
+        results = []
+        
+        for i in range(count):
+            try:
+                context = ai_prompt if use_ai else None
+                # ORA FUNZIONA VERAMENTE:
+                data = generator.generate(self.schema, context=context)
+                results.append(data)
+            except Exception as e:
+                print(f"Errore generazione record {i}: {e}")
+                
+        return results
+'''
