@@ -27,8 +27,7 @@ class SchemaParser:
 
         self._validate_structure(schema_data)
 
-
-        return True
+        return schema_data
 
     def _validate_structure(self, schema: Dict[str, Any]):
 
