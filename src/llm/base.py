@@ -52,6 +52,7 @@ class BaseLLM(ABC):
         Raises:
             LLMError: Se si verifica un errore durante la generazione
         """
+        
         pass
     
     @abstractmethod
