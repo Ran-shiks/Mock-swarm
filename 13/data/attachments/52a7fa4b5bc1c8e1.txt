@@ -1,0 +1,200 @@
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
+DEBUG: SmartGenerator invocato con provider openai
+DEBUG: Context: Prompt di test
