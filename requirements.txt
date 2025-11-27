@@ -133,10 +133,6 @@ pygame==2.5.2
 pyglet==2.0.15
 Pygments==2.15.1
 PyJWT==2.8.0
-pyobjc-core==10.3
-pyobjc-framework-Cocoa==10.3
-pyobjc-framework-CoreBluetooth==10.3
-pyobjc-framework-libdispatch==10.3
 PyOpenGL==3.1.7
 pyparsing==3.1.0
 pyrsistent==0.19.3
