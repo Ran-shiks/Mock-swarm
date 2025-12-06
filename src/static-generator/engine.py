@@ -28,20 +28,9 @@ class MockGenEngine:
                  use_ai: bool = False, 
                  ai_prompt: Optional[str] = None,
                  seed: Optional[int] = None) -> List[Dict[str, Any]]:
-        """
-        Esegue il loop di generazione.
-        
-        Args:
-            count: Numero di record da generare.
-            use_ai: Se True, usa il generatore LLM. Altrimenti usa quello algoritmico.
-            ai_prompt: Contesto opzionale per l'AI.
-            seed: Seme per la riproducibilità (usato principalmente nell'algoritmico).
-        
-        Returns:
-            Una lista di dizionari (i dati generati).
-        """
+
     
-        self.generator = self._get_generator_strategy(use_ai, seed)
+        self.generator = AlgorithmicGenerator(seed=seed)
         results = []
         
         for i in range(count):
@@ -53,11 +42,5 @@ class MockGenEngine:
                 print(f"Errore generazione record {i}: {e}")
                 
         return results
-
-    def _get_generator_strategy(self, use_ai: bool, seed: Optional[int]):
-        if use_ai:
-            return SmartGenerator(seed=seed)
-        else:
-            return AlgorithmicGenerator(seed=seed)
 
 
