@@ -2,3 +2,4 @@ pytest
 behave
 allure-behave
 allure-pytest
+requests>=2.31.0
