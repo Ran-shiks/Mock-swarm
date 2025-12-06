@@ -5,10 +5,14 @@ import json
 
 from src.static_generator.schema_parser import SchemaParser, SchemaError
 
-# Schema di esempio per i test
+# Schema di esempio per i test (JSON Schema valido)
 EXAMPLE_SCHEMA = {
-    "name": {"type": "string"},
-    "age": {"type": "integer"}
+    "type": "object",
+    "properties": {
+        "name": {"type": "string"},
+        "age": {"type": "integer"}
+    },
+    "required": ["name", "age"]
 }
 
 def create_temp_json(data):

@@ -73,6 +73,22 @@ def test_generate_none_n():
 
 # TC-011: Happy Path (n=5)
 def test_generate_happy_path():
+    """
+    Test the happy path for the `generate` method of the `MockEngine` class.
+
+    This test verifies that the `generate` method:
+    - Returns a list of records.
+    - Produces the correct number of records as specified by the input.
+    - Ensures each record in the list is a dictionary.
+
+    Preconditions:
+    - A valid schema file ("valid_schema.json") must exist at the specified schema path.
+
+    Assertions:
+    - The returned value is a list.
+    - The length of the list matches the requested number of records.
+    - Each item in the list is a dictionary.
+    """
     engine = MockEngine(schema_path("valid_schema.json"))
     records = engine.generate(5)
     assert isinstance(records, list)

@@ -16,37 +16,37 @@ class SchemaParser:
         self.validate_schema()
 
     def validate_schema(self):
-        # Validazione base, espandibile
+        # Lo schema deve essere conforme a JSON Schema
         if not isinstance(self.schema, dict):
-            raise ValueError("Lo schema deve essere un oggetto JSON.")
-        for field, props in self.schema.items():
-            if "type" not in props:
-                raise ValueError(f"Il campo '{field}' deve avere una proprietà 'type'.")
+            raise SchemaError("Lo schema deve essere un oggetto JSON.")
+        if "type" not in self.schema or self.schema["type"] != "object":
+            raise SchemaError("Lo schema deve avere 'type': 'object'.")
+        if "properties" not in self.schema or not isinstance(self.schema["properties"], dict):
+            raise SchemaError("Lo schema deve avere una proprietà 'properties' di tipo oggetto.")
+        # Opzionale: controlla che 'required' sia una lista se presente
+        if "required" in self.schema and not isinstance(self.schema["required"], list):
+            raise SchemaError("La proprietà 'required' deve essere una lista.")
 
     def get_fields(self):
-        return self.schema
+        # Restituisce le proprietà dello schema
+        return self.schema.get("properties", {})
 
     def parse_file(self, file_path: str) -> Dict[str, Any]:
-
-        # check path:
         if not os.path.exists(file_path):
             raise FileNotFoundError(f"Schema not found in {file_path}")
-        
-        # otherwise try to parse file as json
         try:
-            with open(file_path, 'r', encoding='utf-8') as f :
+            with open(file_path, 'r', encoding='utf-8') as f:
                 schema_data = json.load(f)
         except json.JSONDecodeError as e:
             raise SchemaError(f"Invalid file {e}")
-        
-        #validate json structure
-
-        self._validate_structure(schema_data)
-
+        self._validate_structure(self.schema)
+        try:
+            validate(instance=schema_data, schema=self.schema)
+        except ValidationError as e:
+            raise SchemaError(f"Errore di validazione dei dati: {e.message}")
         return schema_data
 
     def _validate_structure(self, schema: Dict[str, Any]):
-
         try:
             cls = validator_for(schema)
             cls.check_schema(schema)

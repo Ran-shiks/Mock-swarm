@@ -12,6 +12,8 @@ class UUIDGenerator(FieldGenerator):
 class ChoiceGenerator(FieldGenerator):
     def generate(self):
         options = self.props.get("options", [])
+        if not options:
+            return [] 
         weights = self.props.get("weights", [1] * len(options))
         return random.choices(options, weights=weights, k=1)[0]
 
@@ -39,7 +41,6 @@ class ObjectGenerator(FieldGenerator):
     def generate(self):
         fields = self.props.get("fields", {})
         result = {}
-        from algorithmic import get_generator
         for fname, fprops in fields.items():
             gen = get_generator(fname, fprops)
             result[fname] = gen.generate()
@@ -61,6 +62,12 @@ class ArrayGenerator(FieldGenerator):
                 result.append(fake.word())
         return result
 
+class IntegerGenerator(FieldGenerator):
+    def generate(self):
+        min_v = self.props.get("min_value", 0)
+        max_v = self.props.get("max_value", 100)
+        return random.randint(min_v, max_v)
+
 def get_generator(field_name, field_props):
     t = field_props["type"]
     if t == "uuid":
@@ -69,6 +76,8 @@ def get_generator(field_name, field_props):
         return ChoiceGenerator(field_name, field_props)
     elif t == "float":
         return FloatGenerator(field_name, field_props)
+    elif t == "integer":
+        return IntegerGenerator(field_name, field_props)
     elif t == "string":
         return StringGenerator(field_name, field_props)
     elif t == "object":
