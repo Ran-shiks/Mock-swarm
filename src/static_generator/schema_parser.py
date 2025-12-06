@@ -10,6 +10,22 @@ from jsonschema.validators import validator_for
 
 class SchemaParser:
 
+    def __init__(self, schema_path: str):
+        with open(schema_path, 'r') as f:
+            self.schema = json.load(f)
+        self.validate_schema()
+
+    def validate_schema(self):
+        # Validazione base, espandibile
+        if not isinstance(self.schema, dict):
+            raise ValueError("Lo schema deve essere un oggetto JSON.")
+        for field, props in self.schema.items():
+            if "type" not in props:
+                raise ValueError(f"Il campo '{field}' deve avere una proprietà 'type'.")
+
+    def get_fields(self):
+        return self.schema
+
     def parse_file(self, file_path: str) -> Dict[str, Any]:
 
         # check path:
