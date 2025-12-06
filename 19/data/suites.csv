@@ -1,0 +1,61 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","1","test_generate_single_record_valid_schema","tests.tests_static_generator.engine","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_engine","",""
+"","0","test_float_generator_bva_massimo_piu_1","tests.tests_static_generator.algorithmic","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_algorithmic","",""
+"","0","test_float_generator_bva_minimo_meno_1","tests.tests_static_generator.algorithmic","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_algorithmic","",""
+"","3","test_TC_005_bva_minimo","tests.tests_static_generator.schema_parser","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_schema_parser","",""
+"","1","test_TC_003_errore_file_non_esistente","tests.tests_static_generator.schema_parser","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_schema_parser","",""
+"","0","test_uuid_generator_wect_valido","tests.tests_static_generator.algorithmic","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_algorithmic","",""
+"","0","test_generate_non_numeric_n[3.14]","tests.tests_static_generator.engine","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_engine","",""
+"","0","test_float_generator_happy_path","tests.tests_static_generator.algorithmic","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_algorithmic","",""
+"","0","test_generate_missing_schema","tests.tests_static_generator.engine","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_engine","",""
+"","0","test_string_generator_non_supportato","tests.tests_static_generator.algorithmic","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_algorithmic","",""
+"","3","test_TC_007_bva_massimo","tests.tests_static_generator.schema_parser","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_schema_parser","",""
+"","0","test_float_generator_bva_minimo","tests.tests_static_generator.algorithmic","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_algorithmic","",""
+"","0","test_generate_typical_records","tests.tests_static_generator.engine","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_engine","",""
+"","0","test_array_generator_happy_path","tests.tests_static_generator.algorithmic","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_algorithmic","",""
+"","1","test_object_generator_wect_non_valido","tests.tests_static_generator.algorithmic","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_algorithmic","",""
+"","0","test_tipo_non_supportato_errore","tests.tests_static_generator.algorithmic","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_algorithmic","",""
+"","0","test_array_generator_wect_valido","tests.tests_static_generator.algorithmic","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_algorithmic","",""
+"","0","test_input_non_dizionario_errore","tests.tests_static_generator.algorithmic","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_algorithmic","",""
+"","0","test_string_generator_address","tests.tests_static_generator.algorithmic","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_algorithmic","",""
+"","0","test_object_generator_wect_valido","tests.tests_static_generator.algorithmic","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_algorithmic","",""
+"","0","test_generate_non_numeric_n[bad_n2]","tests.tests_static_generator.engine","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_engine","",""
+"","3","test_TC_008_bva_massimo_piu_1","tests.tests_static_generator.schema_parser","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_schema_parser","",""
+"","1","test_string_generator_city","tests.tests_static_generator.algorithmic","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_algorithmic","",""
+"","3","test_TC_006_bva_minimo_meno_1","tests.tests_static_generator.schema_parser","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_schema_parser","",""
+"","1","test_proprieta_mancante_type_errore","tests.tests_static_generator.algorithmic","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_algorithmic","",""
+"","0","test_float_generator_bva_massimo","tests.tests_static_generator.algorithmic","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_algorithmic","",""
+"","1","test_generate_zero_records","tests.tests_static_generator.engine","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_engine","",""
+"","0","test_generate_none_n","tests.tests_static_generator.engine","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_engine","",""
+"","0","test_TC_004_errore_file_non_json","tests.tests_static_generator.schema_parser","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_schema_parser","",""
+"","0","test_choice_generator_wect_valido","tests.tests_static_generator.algorithmic","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_algorithmic","",""
+"","0","test_array_generator_bva_minimo","tests.tests_static_generator.algorithmic","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_algorithmic","",""
+"","4","test_TC_009_errore_tipo_dato","tests.tests_static_generator.schema_parser","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_schema_parser","",""
+"","1","test_generate_non_numeric_n[bad_n3]","tests.tests_static_generator.engine","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_engine","",""
+"","16","test_generate_max_records","tests.tests_static_generator.engine","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_engine","",""
+"","3","test_TC_001_wect_valido","tests.tests_static_generator.schema_parser","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_schema_parser","",""
+"","0","test_generate_malformed_schema","tests.tests_static_generator.engine","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_engine","",""
+"","3","test_TC_002_wect_non_valido","tests.tests_static_generator.schema_parser","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_schema_parser","",""
+"
+    Test the happy path for the `generate` method of the `MockEngine` class.
+
+    This test verifies that the `generate` method:
+    - Returns a list of records.
+    - Produces the correct number of records as specified by the input.
+    - Ensures each record in the list is a dictionary.
+
+    Preconditions:
+    - A valid schema file (""valid_schema.json"") must exist at the specified schema path.
+
+    Assertions:
+    - The returned value is a list.
+    - The length of the list matches the requested number of records.
+    - Each item in the list is a dictionary.
+    ","1","test_generate_happy_path","tests.tests_static_generator.engine","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_engine","",""
+"","0","test_generate_non_numeric_n[dieci]","tests.tests_static_generator.engine","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_engine","",""
+"","0","test_generate_unsupported_type","tests.tests_static_generator.engine","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_engine","",""
+"","3","test_TC_010_happy_path","tests.tests_static_generator.schema_parser","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_schema_parser","",""
+"","15","test_generate_max_plus_one_records","tests.tests_static_generator.engine","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_engine","",""
+"","0","test_array_generator_bva_massimo","tests.tests_static_generator.algorithmic","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_algorithmic","",""
+"","0","test_generate_negative_records","tests.tests_static_generator.engine","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_engine","",""
+"","0","test_choice_generator_wect_non_valido","tests.tests_static_generator.algorithmic","Sat Dec 06 18:06:17 UTC 2025","passed","Sat Dec 06 18:06:17 UTC 2025","","test_algorithmic","",""
