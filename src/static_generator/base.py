@@ -19,3 +19,11 @@ class BaseGenerator(ABC):
             Dati generati (dict, list, string, etc.)
         """
         pass
+
+class FieldGenerator:
+    def __init__(self, field_name, field_props):
+        self.name = field_name
+        self.props = field_props
+
+    def generate(self):
+        raise NotImplementedError("Implementare il metodo generate.")
