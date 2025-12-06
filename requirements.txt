@@ -1,3 +1,5 @@
+
+requests>=2.31.0
 allure-pytest==2.15.0
 allure-python-commons==2.15.0
 attrs==25.4.0
