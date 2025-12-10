@@ -8,8 +8,8 @@
         /* Import Google Font - Poppins */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
     </style>
-    <link rel="stylesheet" href="../static/style.css">
-        <link rel="stylesheet" href="../static/chat.css">    
+    <link rel="stylesheet" href="/static/style.css">
+        <link rel="stylesheet" href="/static/chat.css">    
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
@@ -150,7 +150,7 @@
     // Show a loading animation while waiting for the API response
     const showLoadingAnimation = () => {
         const html = `<div class="message-content">
-                        <img class="avatar" src="images/gemini.svg" alt="Gemini avatar">
+                        <img class="avatar" src="/static/images/chat.png" alt="Chat avatar">
                         <p class="text"></p>
                         <div class="loading-indicator">
                             <div class="loading-bar"></div>
@@ -183,7 +183,7 @@
         isResponseGenerating = true;
 
         const html = `<div class="message-content">
-                        <img class="avatar" src="images/user.jpg" alt="User avatar">
+                        <img class="avatar" src="/static/images/user.png" alt="User avatar">
                         <p class="text"></p>
                       </div>`;
         const outgoingMessageDiv = createMessageElement(html, "outgoing");
