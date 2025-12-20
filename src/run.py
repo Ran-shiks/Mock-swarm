@@ -51,27 +51,47 @@ def chat_page():
 @app.route("/ai", methods=["POST"])
 def ai_chat():
     """Interfaccia Flask -> V2OlamaChat."""
+    print("\n" + "="*50)
+    print("[DEBUG] Ricevuta richiesta /ai")
+    
     data = request.get_json()
+    print(f"[DEBUG] Data ricevuta: {data}")
+    
     prompt = data.get("prompt", "").strip()
     session_id = data.get("session_id", "default")
     
+    print(f"[DEBUG] Prompt: {prompt}")
+    print(f"[DEBUG] Session ID: {session_id}")
+    
     if not prompt:
+        print("[ERROR] Prompt mancante!")
         return jsonify({"error": "Prompt mancante"}), 400
 
     # Ottieni o crea una sessione chat
     if session_id not in chat_sessions:
         system_prompt = data.get("system", "Sei un assistente utile e amichevole.")
+        print(f"[DEBUG] Creata nuova sessione con system prompt: {system_prompt}")
         chat_sessions[session_id] = V2OlamaChat(system=system_prompt)
     
     chat = chat_sessions[session_id]
     
     try:
+        print(f"[DEBUG] Invio al modello LLM...")
         response = chat.send_message(prompt)
-        return jsonify({
+        print(f"[DEBUG] Risposta ricevuta: {response[:100]}...")
+        
+        result = {
             "response": response,
             "session_id": session_id
-        })
+        }
+        print(f"[DEBUG] Invio risposta al client")
+        print("="*50 + "\n")
+        return jsonify(result)
     except Exception as e:
+        print(f"[ERROR] Eccezione: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        print("="*50 + "\n")
         return jsonify({"error": str(e)}), 500
 
 

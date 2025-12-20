@@ -138,7 +138,38 @@
         }, 30);
     };
 
-    // Show predefined response - with 1-second delay
+    // Fetch response from Flask backend
+    const fetchBotResponse = async (incomingMessageDiv, textElement) => {
+        try {
+            const response = await fetch("/ai", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    prompt: userMessage,
+                    session_id: "default",
+                    system: "Sei un assistente utile, conciso e amichevole."
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            const botResponse = data.response || "No response received from the AI.";
+            
+            incomingMessageDiv.classList.remove("loading");
+            showTypingEffect(botResponse, textElement, incomingMessageDiv);
+        } catch (error) {
+            console.error("Error:", error);
+            textElement.innerText = "Sorry, there was an error communicating with the AI. Please try again.";
+            isResponseGenerating = false;
+        }
+    };
+
+    // Show predefined response - with 1-second delay (fallback)
     const showPredefinedResponse = (incomingMessageDiv, textElement) => {
         setTimeout(() => {
             const normalizedUserMessage = userMessage.toLowerCase().trim();
@@ -164,7 +195,8 @@
         chatContainer.scrollTo(0, chatContainer.scrollHeight);
         const textElement = incomingMessageDiv.querySelector(".text");
 
-        showPredefinedResponse(incomingMessageDiv, textElement);
+        // Use Flask backend to get response
+        fetchBotResponse(incomingMessageDiv, textElement);
     };
 
     // Copy message text to the clipboard

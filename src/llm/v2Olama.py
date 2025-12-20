@@ -10,11 +10,11 @@ def embed(text: str):
     r.raise_for_status()
     return r.json()["embedding"]
 
-def generateMock(system: str, prompt: str, temperature: float = 8.0) -> str:
+def generateMock(system: str, prompt: str, temperature: float = 0.7) -> str:
     body = {
         "model": LLM_MODEL,
         "system": system,
-        "prompt": prompt + "\n\nRispondi SOLO con JSON valido.",
+        "prompt": prompt,
         "options": {
             "temperature": temperature,
             "top_p": 0.9,
