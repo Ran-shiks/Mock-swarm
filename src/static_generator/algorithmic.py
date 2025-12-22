@@ -1,4 +1,3 @@
-fake = Faker('it_IT')
 from faker import Faker
 import uuid
 import random
