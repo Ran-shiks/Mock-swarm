@@ -1,3 +1,4 @@
+from jsonschema import SchemaError, ValidationError
 import pytest
 import os
 from src.static_generator.engine import MockEngine
@@ -98,6 +99,6 @@ def test_generate_happy_path():
 
 # TC-012: Errore (tipo non supportato nello schema)
 def test_generate_unsupported_type():
-    engine = MockEngine(schema_path("unsupported_type_schema.json"))
     with pytest.raises(Exception):
+        engine = MockEngine(schema_path("unsupported_type_schema.json"))
         engine.generate(1)
