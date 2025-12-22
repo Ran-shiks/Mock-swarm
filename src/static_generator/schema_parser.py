@@ -31,7 +31,7 @@ class SchemaParser:
                 with open(schema_path, 'r', encoding=encoding) as f:
                     self.schema = json.load(f)
             except (OSError, json.JSONDecodeError) as e:
-                raise SchemaError(f"Errore nel caricamento dello schema: {e}")
+                raise FileNotFoundError(f"Errore nel caricamento dello schema: {e}")
         else:
             raise ValueError("Fornire almeno uno tra schema_path o schema.")
         self.validate_schema(self.schema)

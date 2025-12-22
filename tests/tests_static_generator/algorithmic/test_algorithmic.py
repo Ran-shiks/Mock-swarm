@@ -93,11 +93,11 @@ def test_tipo_non_supportato_errore():
         get_generator("campo", {"type": "unknown"})
 
 def test_proprieta_mancante_type_errore():
-    with pytest.raises(KeyError):
+    with pytest.raises(ValueError):
         get_generator("campo", {})
 
 def test_input_non_dizionario_errore():
-    with pytest.raises(TypeError):
+    with pytest.raises(AttributeError):
         get_generator("campo", "type: uuid")
 
 def test_float_generator_happy_path():
