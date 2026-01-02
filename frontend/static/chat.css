@@ -140,10 +140,32 @@
             max-height: 100vh;
             overflow-y: auto;
             scrollbar-color: #999 transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .chat-list .message {
+            display: flex;
+            width: 100%;
         }
         .chat-list .message.incoming {
             margin-top: 1.5rem;
-            width: 30%;
+            width: 100%;
+            max-width: 70%;
+            align-self: flex-start;
+        }
+        .chat-list .message.outgoing {
+            margin-top: 1.5rem;
+            width: 100%;
+            max-width: 70%;
+            align-self: flex-end;
+            justify-content: flex-end;
+        }
+        .chat-list .message.outgoing .message-content {
+            flex-direction: row-reverse;
+        }
+        .chat-list .message.outgoing .text {
+            text-align: right;
         }
         .chat-list .message .message-content {
             display: flex;
