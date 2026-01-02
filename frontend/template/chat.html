@@ -157,11 +157,29 @@
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            const data = await response.json();
-            const botResponse = data.response || "No response received from the AI.";
-            
-            incomingMessageDiv.classList.remove("loading");
-            showTypingEffect(botResponse, textElement, incomingMessageDiv);
+            const jsonData = await response.json();
+            console.log("Full JSON Response:", jsonData);
+
+            // Gestione risposta JSON rigida
+            if (jsonData.success && jsonData.data) {
+                const payload = jsonData.data;
+                const resp = payload.response || {};
+                const preferred = resp.items && resp.items.length ? resp.items : (resp.json ?? resp.raw ?? payload);
+                const prettyJson = JSON.stringify(preferred, null, 2);
+                incomingMessageDiv.classList.remove("loading");
+                textElement.innerText = prettyJson;
+                isResponseGenerating = false;
+                chatContainer.scrollTo(0, chatContainer.scrollHeight);
+            } else if (jsonData.response) {
+                // Fallback formato vecchio
+                const botResponse = jsonData.response || "No response received from the AI.";
+                incomingMessageDiv.classList.remove("loading");
+                textElement.innerText = botResponse;
+                isResponseGenerating = false;
+                chatContainer.scrollTo(0, chatContainer.scrollHeight);
+            } else {
+                throw new Error("Invalid response format from server");
+            }
         } catch (error) {
             console.error("Error:", error);
             textElement.innerText = "Sorry, there was an error communicating with the AI. Please try again.";
