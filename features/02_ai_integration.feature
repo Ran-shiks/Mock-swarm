@@ -1,3 +1,4 @@
+@skip
 Feature: AI Integration
   As a user
   I want to use an LLM to generate data

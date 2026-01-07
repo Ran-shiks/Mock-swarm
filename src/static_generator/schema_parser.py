@@ -3,6 +3,7 @@
 
 import json
 import os
+import copy
 from typing import Any, Dict
 from jsonschema import validate, ValidationError
 from jsonschema.validators import validator_for
@@ -36,8 +37,9 @@ class SchemaParser:
             raise ValueError("Fornire almeno uno tra schema_path o schema.")
         self.validate_schema(self.schema)
 
-    @staticmethod
-    def validate_schema(schema: dict) -> None:
+   # @staticmethod
+    @classmethod
+    def validate_schema(cls, schema: dict) -> None:
         """
         Valida la struttura di uno schema JSON secondo le regole base e JSON Schema.
         """
@@ -51,12 +53,45 @@ class SchemaParser:
             raise SchemaError("La proprietà 'required' deve essere una lista.")
         # Validazione secondo specifica JSON Schema
         try:
-            cls = validator_for(schema)
-            cls.check_schema(schema)
+            clean_schema = cls._sanitize_schema(schema)
+            validator_cls = validator_for(clean_schema)
+            validator_cls.check_schema(clean_schema)
+
+            #cls = validator_for(schema)
+            #cls.check_schema(schema)
         except ValidationError as e:
             raise SchemaError(f"Lo schema fornito non è valido secondo le specifiche JSON Schema: {e.message}")
         except Exception as e:
             raise SchemaError(f"Errore imprevisto nella validazione dello schema: {str(e)}")
+
+    @staticmethod
+    def _sanitize_schema(schema: dict) -> dict:
+        """
+        Helper privato: crea una copia dello schema sostituendo i tipi custom
+        (uuid, choice, ecc.) con 'string' affinché jsonschema non dia errore.
+        """
+        clean = copy.deepcopy(schema)
+
+        def recursive_fix(node):
+            if isinstance(node, dict):
+                # Se è un tipo custom, lo camuffiamo da stringa
+                if node.get("type") in ["uuid", "choice", "faker"]:
+                    node["type"] = "string"
+                    # Rimuoviamo chiavi che darebbero fastidio su una stringa
+                    node.pop("options", None)
+                    node.pop("generator", None)
+                    node.pop("fields", None)  # Se usate 'fields', lo togliamo per il validatore standard
+
+                # Ricorsione sui figli
+                for key, value in node.items():
+                    recursive_fix(value)
+
+            elif isinstance(node, list):
+                for item in node:
+                    recursive_fix(item)
+
+        recursive_fix(clean)
+        return clean
 
     def get_fields(self) -> Dict[str, Any]:
         """
