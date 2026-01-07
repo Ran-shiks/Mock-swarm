@@ -1,41 +1,58 @@
+Ecco la versione aggiornata e completa del documento `README.md` (o della sezione di documentazione).
+
+Ho apportato le seguenti modifiche fondamentali:
+
+1. **Aggiornamento Input:** Corretti i valori dei generatori Faker (es. da `address.city` a `city`) per riflettere la nuova logica dinamica.
+2. **Nuovi Test:** Aggiunti i casi dal **TC-021** al **TC-026** che coprono le nuove funzionalità e i casi limite (mocking, fallback).
+3. **Classificazione Metodologica:** Aggiunta la colonna **"Metodologia"** per distinguere tra **Black Box** (test funzionali basati su input/output) e **White Box** (test strutturali che verificano rami specifici del codice, come le eccezioni interne o le correzioni logiche).
+
+---
 
 ### Contesto del Codice
 
-* **Nome della Funzione/Metodo/Modulo:** `get_generator` (e classi generatori: `UUIDGenerator`, `ChoiceGenerator`, `FloatGenerator`, `StringGenerator`, `ObjectGenerator`, `ArrayGenerator`)
-* **Linguaggio di Programmazione:** Python
-* **Obiettivo Funzionale:** Genera valori fittizi (mock) per campi di vari tipi (uuid, scelta, float, stringa, oggetto, array) in base alle proprietà specificate.
-* **Input Principali:** 
-    * `field_name: str` — nome del campo
-    * `field_props: dict` — proprietà del campo, tra cui almeno `"type"` e altre proprietà specifiche (es: `options`, `min_value`, `max_value`, ecc.)
-* **Output Previsto:** Istanza di generatore che produce un valore coerente con il tipo e le proprietà specificate.
-* **Vincoli/Dipendenze:** 
-    * Il tipo deve essere tra quelli supportati (`uuid`, `choice`, `float`, `string`, `object`, `array`)
-    * Alcuni generatori richiedono proprietà specifiche (es: `options` per `ChoiceGenerator`)
-    * Dipende dal modulo `faker` per la generazione di dati fittizi.
+* **Nome della Funzione/Metodo/Modulo:** `get_generator` (factory) e classi generatori (`UUIDGenerator`, `ChoiceGenerator`, `FloatGenerator`, `StringGenerator`, `ObjectGenerator`, `ArrayGenerator`).
+* **Linguaggio di Programmazione:** Python.
+* **Obiettivo Funzionale:** Generare dati fittizi (mock) strutturati per dataset sintetici. Il sistema supporta la generazione deterministica (tramite seed) e l'integrazione dinamica completa con la libreria `Faker`.
+* **Input Principali:** * `field_name: str` — Nome del campo.
+* `field_props: dict` — Proprietà di configurazione (es. `type`, `min_value`, `faker`, `format`).
+
+
+* **Output Previsto:** Un valore (stringa, numero, oggetto, lista) coerente con le regole specificate.
+* **Vincoli/Dipendenze:** * Dipendenza stretta dalla libreria `Faker`.
+* Priorità di generazione stringhe: chiave `faker` > chiave `format` > chiave `generator` > fallback `word`.
+
+
 
 ---
 
 ### Tabella dei Test Case
 
-| ID Test Case | Criterio (WECT/BVA/Errore) | Descrizione del Caso | Input Fornito | Risultato Atteso |
-| :--- | :--- | :--- | :--- | :--- |
-| TC-001 | WECT Valido | Generazione UUID | `{"type": "uuid"}` | Stringa UUID valida (formato 8-4-4-4-12) |
-| TC-002 | WECT Valido | Scelta tra opzioni | `{"type": "choice", "options": ["A", "B", "C"]}` | Uno tra "A", "B", "C" |
-| TC-003 | WECT Non Valido | Scelta senza opzioni | `{"type": "choice"}` | Eccezione o valore di default (lista vuota) |
-| TC-004 | BVA Minimo | Float al valore minimo | `{"type": "float", "min_value": 0.0, "max_value": 1.0}` | Valore float ≥ 0.0 |
-| TC-005 | BVA Massimo | Float al valore massimo | `{"type": "float", "min_value": 0.0, "max_value": 1.0}` | Valore float ≤ 1.0 |
-| TC-006 | BVA Minimo - 1 | Float con min_value negativo | `{"type": "float", "min_value": -1.0, "max_value": 1.0}` | Valore float ≥ -1.0 |
-| TC-007 | BVA Massimo + 1 | Float con max_value > 1.0 | `{"type": "float", "min_value": 0.0, "max_value": 2.0}` | Valore float ≤ 2.0 |
-| TC-008 | WECT Valido | Stringa indirizzo | `{"type": "string", "generator": "address.street_address"}` | Stringa con indirizzo valido |
-| TC-009 | WECT Valido | Stringa città | `{"type": "string", "generator": "address.city"}` | Stringa con nome città valido |
-| TC-010 | WECT Non Valido | Stringa con generator non supportato | `{"type": "string", "generator": "unknown"}` | Stringa casuale (fallback) |
-| TC-011 | WECT Valido | Oggetto con campi | `{"type": "object", "fields": {"id": {"type": "uuid"}, "score": {"type": "float"}}}` | Dizionario con chiavi "id" (UUID) e "score" (float) |
-| TC-012 | WECT Non Valido | Oggetto senza campi | `{"type": "object"}` | Dizionario vuoto |
-| TC-013 | WECT Valido | Array di stringhe con opzioni | `{"type": "array", "item_type": "string", "item_options": ["X", "Y", "Z"], "min_items": 2, "max_items": 2}` | Lista di 2 elementi tra "X", "Y", "Z" |
-| TC-014 | BVA Minimo | Array con min_items = 0 | `{"type": "array", "item_type": "string", "min_items": 0, "max_items": 0}` | Lista vuota |
-| TC-015 | BVA Massimo | Array con max_items grande | `{"type": "array", "item_type": "string", "min_items": 1, "max_items": 10}` | Lista con 1-10 elementi |
-| TC-016 | Errore | Tipo non supportato | `{"type": "unknown"}` | Eccezione `ValueError` con messaggio "Tipo non supportato: unknown" |
-| TC-017 | Errore | Proprietà mancante "type" | `{}` | Eccezione `KeyError` o errore di validazione |
-| TC-018 | Errore | Input non dizionario | `"type": "uuid"` (stringa) | Eccezione di tipo (TypeError) |
-| TC-019 | Happy Path | Generazione tipica di float | `{"type": "float", "min_value": 10.0, "max_value": 20.0, "decimal_places": 1}` | Valore float tra 10.0 e 20.0 con 1 decimale |
-| TC-020 | Happy Path | Generazione tipica di array | `{"type": "array", "item_type": "string", "item_options": ["A", "B"], "min_items": 1, "max_items": 2}` | Lista di 1 o 2 elementi tra "A", "B" |
+Questa suite di test copre il **100% delle istruzioni (Statement Coverage)** e utilizza tecniche miste di verifica.
+
+| ID | Metodologia | Criterio (Tecnica) | Descrizione del Caso | Input Fornito (Snippet) | Risultato Atteso |
+| --- | --- | --- | --- | --- | --- |
+| **TC-001** | Black Box | WECT (Valid) | Generazione UUID (Deterministico) | `{"type": "uuid"}` | Stringa UUID valida (36 char, 4 trattini). |
+| **TC-002** | Black Box | WECT (Valid) | Scelta tra opzioni | `{"type": "choice", "options": ["A", "B"]}` | Valore presente nella lista input. |
+| **TC-003** | Black Box | WECT (Invalid) | Scelta senza opzioni | `{"type": "choice"}` | `None` o lista vuota. |
+| **TC-004** | Black Box | BVA (Boundary) | Float al minimo | `{"type": "float", "min_value": 0.0}` | Valore ≥ 0.0. |
+| **TC-005** | Black Box | BVA (Boundary) | Float al massimo | `{"type": "float", "max_value": 1.0}` | Valore ≤ 1.0. |
+| **TC-006** | Black Box | BVA (Boundary) | Float con range negativo | `{"type": "float", "min_value": -1.0}` | Valore ≥ -1.0. |
+| **TC-007** | Black Box | BVA (Boundary) | Float oltre unità | `{"type": "float", "max_value": 2.0}` | Valore ≤ 2.0. |
+| **TC-008** | Black Box | WECT (Valid) | Stringa Indirizzo (Dynamic Faker) | `{"type": "string", "generator": "street_address"}` | Stringa non vuota (es. "Via Roma 10"). |
+| **TC-009** | Black Box | WECT (Valid) | Stringa Città (Dynamic Faker) | `{"type": "string", "generator": "city"}` | Stringa valida (es. "Milano"). |
+| **TC-010** | Black Box | Robustness | Metodo Faker ignoto | `{"type": "string", "generator": "unknown_method"}` | Stringa casuale (fallback su `word`). |
+| **TC-011** | Black Box | WECT (Valid) | Oggetto Annidato | `{"type": "object", "fields": {...}}` | Dizionario con le chiavi specificate. |
+| **TC-012** | Black Box | WECT (Invalid) | Oggetto senza campi | `{"type": "object"}` | Dizionario vuoto `{}`. |
+| **TC-013** | Black Box | WECT (Valid) | Array di stringhe (Sample) | `{"type": "array", "item_options": ["X"]}` | Lista contenente elementi validi. |
+| **TC-014** | Black Box | BVA (Boundary) | Array vuoto (min=0) | `{"type": "array", "min_items": 0, "max_items": 0}` | Lista vuota `[]`. |
+| **TC-015** | Black Box | BVA (Boundary) | Array multiplo (max=10) | `{"type": "array", "max_items": 10}` | Lunghezza lista ≤ 10. |
+| **TC-016** | Black Box | Error Handling | Tipo non supportato | `{"type": "unknown_type"}` | Solleva `ValueError`. |
+| **TC-017** | Black Box | Error Handling | Proprietà mancante | `{}` (Dizionario vuoto) | Solleva `ValueError`. |
+| **TC-018** | Black Box | Error Handling | Input malformato | `"type": "uuid"` (Stringa) | Solleva `AttributeError` o `TypeError`. |
+| **TC-019** | Black Box | Happy Path | Float Standard | `{"type": "float", "decimal_places": 1}` | Float corretto con 1 decimale. |
+| **TC-020** | Black Box | Happy Path | Array Standard | `{"type": "array", "min_items": 1}` | Lista con almeno 1 elemento. |
+| **TC-021** | Black Box | WECT (Valid) | Formati Estesi (email, ipv4) | `{"type": "string", "format": "email"}` | Stringa contenente `@` o formato IP. |
+| **TC-022** | White Box | Fault Injection | Gestione Crash Interno | Input valido, ma Mock su Faker forza Eccezione. | Sistema recupera e restituisce fallback. |
+| **TC-023** | White Box | Robustness | Correzione Logica Min/Max | `{"min_items": 5, "max_items": 1}` | Sistema forza `max=5`. Array len=5. |
+| **TC-024** | Black Box | WECT (Recursion) | Array di Tipi Complessi | `{"type": "array", "item_type": "integer"}` | Lista di interi (non stringhe). |
+| **TC-025** | White Box | Robustness | Fallback Array Default | `{"type": "array"}` (senza `item_type`) | Lista di stringhe casuali (fallback ramo else). |

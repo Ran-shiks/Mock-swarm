@@ -1,10 +1,86 @@
 {
   "type": "object",
   "properties": {
-    "id": { "type": "integer", "minimum": 1, "maximum": 9999 },
-    "nome": { "type": "string" },
-    "email": { "type": "string", "format": "email" },
-    "voto": { "type": "number", "minimum": 18, "maximum": 30 }
+    "_meta": {
+      "type": "uuid"
+    },
+    "anagrafica": {
+      "type": "object",
+      "fields": {
+        "nome": {
+          "type": "string",
+          "format": "first_name"
+        },
+        "cognome": {
+          "type": "string",
+          "format": "last_name"
+        },
+        "codice_fiscale_fake": {
+           "type": "string",
+           "format": "ssn"
+        },
+        "telefono": {
+            "type": "string",
+            "format": "phone_number"
+        }
+      }
+    },
+    "profilo_lavorativo": {
+      "type": "object",
+      "fields": {
+        "job_title": {
+          "type": "string",
+          "format": "job"
+        },
+        "azienda": {
+            "type": "string",
+            "format": "company"
+        },
+        "email_aziendale": {
+          "type": "string",
+          "format": "company_email"
+        },
+        "anni_esperienza": {
+          "type": "integer",
+          "min_value": 1,
+          "max_value": 40
+        },
+        "stipendio_annuale": {
+          "type": "float",
+          "min_value": 25000.00,
+          "max_value": 95000.00,
+          "decimal_places": 2
+        }
+      }
+    },
+    "dati_bancari": {
+        "type": "object",
+        "fields": {
+            "iban": { "type": "string", "format": "iban" },
+            "carta_credito": { "type": "string", "format": "credit_card_number" },
+            "data_scadenza": { "type": "string", "format": "credit_card_expire" }
+        }
+    },
+    "stato_account": {
+      "type": "choice",
+      "options": ["ATTIVO", "SOSPESO", "PENDING", "BANNATO"],
+      "weights": [0.7, 0.1, 0.15, 0.05]
+    },
+    "indirizzo_spedizione": {
+        "type": "string",
+        "format": "address"
+    },
+    "data_registrazione": {
+      "type": "string",
+      "format": "date_this_decade"
+    },
+    "interessi_tags": {
+      "type": "array",
+      "min_items": 1,
+      "max_items": 4,
+      "item_type": "string",
+      "item_options": ["Tech", "Sport", "Cucina", "Viaggi", "Musica", "Cinema"]
+    }
   },
-  "required": ["id", "nome", "email"]
+  "required": ["anagrafica", "profilo_lavorativo", "stato_account"]
 }
