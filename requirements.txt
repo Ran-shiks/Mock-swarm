@@ -25,3 +25,4 @@ tomli==2.3.0
 typing==3.7.4.3
 typing_extensions==4.15.0
 tzdata==2025.2
+deepeval
