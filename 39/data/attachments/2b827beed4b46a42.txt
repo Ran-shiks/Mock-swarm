@@ -1,0 +1,1 @@
+ERROR    src.static_generator.controller:controller.py:60 Errore durante l'export: Disk full
