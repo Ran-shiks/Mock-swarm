@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from jsonschema import SchemaError, ValidationError
 import pytest
 import os
@@ -99,9 +101,32 @@ def test_generate_happy_path():
 
 # TC-012: Errore (tipo non supportato nello schema)
 def test_generate_unsupported_type():
-    with pytest.raises(Exception):
-        engine = MockEngine(schema_path("unsupported_type_schema.json"))
-        engine.generate(1)
+    """
+         Obiettivo: Verificare che se il generatore interno lancia un'eccezione
+         (es. tipo non gestito logicamente, anche se lo schema è valido),
+         l'engine NON crashi ma metta None nel campo.
+         """
+    # 1. Usiamo uno schema SINTATTICAMENTE VALIDO per passare il check del Parser
+    # (Così evitiamo lo SchemaError iniziale)
+    engine = MockEngine(schema_path("valid_schema.json"))
+
+    # 2. "Sabotiamo" la funzione get_generator interna usando il Mock.
+    # Le diciamo: "Qualsiasi cosa ti chiedano, lancia un'eccezione generica".
+    # IMPORTANTE: Il path nel patch deve puntare a dove viene USATA la funzione, non dove è definita.
+    with patch('src.static_generator.engine.get_generator') as mock_gen:
+        mock_gen.side_effect = Exception("Generatore non trovato o rotto")
+
+        # 3. Eseguiamo la generazione
+        records = engine.generate(1)
+
+    # 4. Asserzioni
+    assert len(records) == 1
+    record = records[0]
+
+    # Verifica: L'engine non è crashato, e i campi sono stati popolati con None
+    # a causa dell'eccezione nel generatore.
+    for key, value in record.items():
+        assert value is None, f"Il campo {key} dovrebbe essere None a causa del fail-safe"
 
 # AGGIUNTO DOPO LA MODIFICA DI MOCK ENGINE(SEED)
 # TC-013: White Box - Generazione Deterministica con Seed
@@ -127,3 +152,8 @@ def test_generate_determinism_with_seed():
     # Verifica White Box
     assert result1 == result2, "Con lo stesso seed, l'output DEVE essere identico"
     assert result1 != result3, "Con seed diversi, l'output DOVREBBE essere diverso"
+
+    from unittest.mock import patch
+
+
+

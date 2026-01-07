@@ -66,12 +66,54 @@ def test_controller_stdout_happy_path(mock_args):
         )
 
 
+# TC-C02: Interaction & Branch Coverage (File Output)
+@pytest.mark.parametrize("path_input, expect_makedirs_call", [
+    ("output/subdir/data.json", True),  # Caso A: Con cartella -> makedirs SI
+    ("data.json", False)  # Caso B: Root -> makedirs NO
+])
+def test_controller_file_output_logic(mock_args, path_input, expect_makedirs_call):
+    """
+    Obiettivo: Verificare la gestione dell'output su file.
+    Copre entrambi i rami logici:
+    1. Creazione cartella padre se necessaria.
+    2. Apertura/Chiusura file.
+    """
+    # SETUP
+    mock_args.out = path_input
+
+    with patch("src.static_generator.controller.MockEngine") as MockEngineCls, \
+            patch("src.static_generator.controller.DataExporter") as MockExporter, \
+            patch("builtins.open", mock_open()) as mocked_file, \
+            patch("os.makedirs") as mock_makedirs:
+
+        mock_instance = MockEngineCls.return_value
+        mock_instance.generate.return_value = [{"id": 1}]
+
+        # ACTION
+        run_generation_process(mock_args)
+
+        # ASSERT
+        # 1. Verifica logica condizionale sulla cartella (Il fix che volevi testare)
+        if expect_makedirs_call:
+            mock_makedirs.assert_called_once_with(os.path.dirname(path_input), exist_ok=True)
+        else:
+            mock_makedirs.assert_not_called()
+
+        # 2. Verifica apertura file
+        mocked_file.assert_called_once_with(path_input, "w", encoding='utf-8', newline='')
+
+        # 3. Verifica export e chiusura (comune a entrambi i casi)
+        file_handle = mocked_file()
+        MockExporter.export.assert_called_once()
+        file_handle.close.assert_called_once()
+
+"""
 # TC-002: Interaction Testing (WECT - Classe Valida: File Output)
 def test_controller_file_output_happy_path(mock_args):
-    """
-    Obiettivo: Verificare il flusso 'Happy Path' con output su FILE.
-    Verifica la corretta gestione delle risorse (apertura, creazione cartelle, chiusura).
-    """
+    
+    #Obiettivo: Verificare il flusso 'Happy Path' con output su FILE.
+    #Verifica la corretta gestione delle risorse (apertura, creazione cartelle, chiusura).
+    
     # SETUP: Impostiamo un percorso file di output
     mock_args.out = "output/subdir/data.json"
 
@@ -104,7 +146,7 @@ def test_controller_file_output_happy_path(mock_args):
 
         # 4. Verifica che il file sia stato CHIUSO
         file_handle.close.assert_called_once()
-
+"""
 
 # TC-003: Robustness Testing (Error Handling - Engine Failure)
 def test_controller_engine_error_propagation(mock_args):

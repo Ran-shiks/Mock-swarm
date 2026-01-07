@@ -1,26 +1,53 @@
-**Contesto del Codice**
 
-- **Nome della Classe/Metodo:** `SchemaParser.parse_file`
-- **Linguaggio di Programmazione:** Python
-- **Obiettivo Funzionale:** Caricare un file JSON e validarne la struttura secondo uno schema JSON.
-- **Input Principali:**  
-  - `file_path: str` (percorso del file JSON da validare)
-- **Output Previsto:**  
-  - Restituisce un `dict` con i dati del file se valido, altrimenti solleva eccezioni (`FileNotFoundError`, `SchemaError`)
-- **Vincoli/Dipendenze:**  
-  - Il file deve esistere, essere un JSON valido e rispettare lo schema.
+## 📄 Documentazione Modulo: `SchemaParser`
+
+### Contesto del Codice
+
+* **Nome della Classe:** `SchemaParser`
+* **Metodi Principali:** `__init__`, `validate_schema`, `parse_file`, `_sanitize_schema`
+* **Linguaggio:** Python
+* **Obiettivo Funzionale:**
+1. Caricare uno schema JSON assicurandosi che sia valido (gestendo internamente tipi custom come `uuid`, `choice` tramite sanitizzazione).
+2. Validare file di dati JSON rispetto allo schema caricato.
+
+
+* **Input Principali:**
+* `schema_path` o `schema_dict` (Inizializzazione)
+* `file_path` (Validazione dati)
+
+
+* **Output Previsto:**
+* Restituisce il dizionario dei dati se validi.
+* Solleva `SchemaError` per errori di validazione o struttura.
+* Solleva `FileNotFoundError` per problemi di I/O.
+
+
 
 ---
 
-| ID Test Case | Criterio (WECT/BVA/Errore) | Descrizione del Caso | Input Fornito | Risultato Atteso |
-| :--- | :--- | :--- | :--- | :--- |
-| TC-001 | WECT Valido | File JSON valido e conforme allo schema | `file_path` con JSON valido e schema corretto | Restituisce dict con i dati |
-| TC-002 | WECT Non valido | File JSON valido ma non conforme allo schema (campo mancante) | `file_path` con JSON che manca un campo richiesto | Solleva `SchemaError` |
-| TC-003 | Errore | File non esistente | `file_path` inesistente | Solleva `FileNotFoundError` |
-| TC-004 | Errore | File non JSON (formato errato) | `file_path` con contenuto non JSON | Solleva `SchemaError` |
-| TC-005 | BVA Minimo | File JSON con il minimo numero di campi richiesti dallo schema | `file_path` con JSON con solo i campi minimi | Restituisce dict con i dati |
-| TC-006 | BVA Minimo - 1 | File JSON con meno campi del minimo richiesto | `file_path` con JSON con un campo mancante | Solleva `SchemaError` |
-| TC-007 | BVA Massimo | File JSON con tutti i campi previsti e opzionali | `file_path` con JSON con tutti i campi | Restituisce dict con i dati |
-| TC-008 | BVA Massimo + 1 | File JSON con campi extra non previsti dallo schema | `file_path` con JSON con campi extra | Restituisce dict (se lo schema consente campi extra) o solleva `SchemaError` (se lo schema li vieta) |
-| TC-009 | Errore | File JSON con tipo di dato errato per un campo | `file_path` con campo di tipo errato (es. stringa invece di intero) | Solleva `SchemaError` |
-| TC-010 | Happy Path | File JSON tipico e completo | `file_path` con dati tipici e corretti | Restituisce dict con i dati |
+### Tabella dei Test Cases
+
+La suite di test è divisa in due categorie:
+
+1. **Black Box (TC-001 a TC-010):** Verifica il comportamento esterno (Input/Output) ignorando l'implementazione interna.
+2. **White Box (TC-011 a TC-017):** Verifica la logica interna, i rami condizionali, le eccezioni specifiche e la struttura del codice.
+
+| ID Test | Tipo (Box) | Criterio | Descrizione | Scenario / Input | Risultato Atteso |
+| --- | --- | --- | --- | --- | --- |
+| **TC-001** | **Black Box** | WECT Valido | Validazione corretta | File JSON conforme allo schema | Restituisce `dict` dati |
+| **TC-002** | **Black Box** | WECT Invalido | Dati incompleti | File JSON senza campo `required` | Eccezione `SchemaError` |
+| **TC-003** | **Black Box** | Errore I/O | File inesistente | Path errato | Eccezione `FileNotFoundError` |
+| **TC-004** | **Black Box** | Errore I/O | File non JSON | Contenuto testuale/corrotto | Eccezione `SchemaError` |
+| **TC-005** | **Black Box** | BVA Minimo | Valori limite (Min) | Valori minimi (es. 0, array vuoto) | Restituisce `dict` dati |
+| **TC-006** | **Black Box** | BVA Out | Sotto limite | Valore sotto il minimo consentito | Eccezione `SchemaError` |
+| **TC-007** | **Black Box** | BVA Massimo | Valori limite (Max) | Valori massimi consentiti | Restituisce `dict` dati |
+| **TC-008** | **Black Box** | BVA Extra | Campi aggiuntivi | JSON con campi non nello schema | Accettato (Default JSON Schema) |
+| **TC-009** | **Black Box** | Type Check | Tipo errato | Stringa al posto di Int | Eccezione `SchemaError` |
+| **TC-010** | **Black Box** | Happy Path | Flusso tipico | Schema e Dati standard | Restituisce `dict` dati |
+| **TC-011** | **White Box** | API Logic | Init vuoto | `SchemaParser()` senza argomenti | Eccezione `ValueError` |
+| **TC-012** | **White Box** | Internal Logic | Schema malformato | Manca `type: object` o `properties` | Eccezione `SchemaError` |
+| **TC-013** | **White Box** | Type Check | Input Schema errato | Schema passato come `list` o `str` | Eccezione `SchemaError` |
+| **TC-014** | **White Box** | Internal Logic | `required` errato | Campo `required` non è una lista | Eccezione `SchemaError` |
+| **TC-015** | **White Box** | API Feature | Context Manager | Uso di `with SchemaParser(...)` | Istanza creata/chiusa |
+| **TC-016** | **White Box** | API Feature | Factory Method | Uso di `SchemaParser.from_dict` | Istanza valida |
+| **TC-017** | **White Box** | Robustness | Crash Interno | Mock eccezione durante `validate` | Catch -> `SchemaError` |
