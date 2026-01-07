@@ -1,0 +1,26 @@
+{
+  "id": {
+    "type": "uuid"
+  },
+  "name": {
+    "type": "string",
+    "generator": "address.city"
+  },
+  "score": {
+    "type": "float",
+    "min_value": 0.0,
+    "max_value": 100.0,
+    "decimal_places": 2
+  },
+  "status": {
+    "type": "choice",
+    "options": ["active", "inactive", "pending"],
+    "weights": [1, 1, 1]
+  },
+  "type": "object",
+  "properties": {
+    "name": { "type": "string" },
+    "age": { "type": "integer" }
+  },
+  "required": ["name", "age"]
+}

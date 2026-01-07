@@ -1,0 +1,15 @@
+{
+  "id": {
+    "type": "uuid"
+  },
+  "name": {
+    "generator": "address.city"
+  },
+  "score": {
+    "type": "float",
+    "min_value": 0.0,
+    "max_value": 100.0,
+    "decimal_places": 2
+  }
+  // manca la virgola qui sopra e manca "type" in "name"
+}
