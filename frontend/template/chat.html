@@ -8,8 +8,8 @@
         /* Import Google Font - Poppins */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
     </style>
-    <link rel="stylesheet" href="../static/style.css">
-        <link rel="stylesheet" href="../static/chat.css">    
+    <link rel="stylesheet" href="/static/style.css">
+        <link rel="stylesheet" href="/static/chat.css">    
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
@@ -138,7 +138,56 @@
         }, 30);
     };
 
-    // Show predefined response - with 1-second delay
+    // Fetch response from Flask backend
+    const fetchBotResponse = async (incomingMessageDiv, textElement) => {
+        try {
+            const response = await fetch("/ai", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    prompt: userMessage,
+                    session_id: "default",
+                    system: "Sei un assistente utile, conciso e amichevole."
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const jsonData = await response.json();
+            console.log("Full JSON Response:", jsonData);
+
+            // Gestione risposta JSON rigida
+            if (jsonData.success && jsonData.data) {
+                const payload = jsonData.data;
+                const resp = payload.response || {};
+                const preferred = resp.items && resp.items.length ? resp.items : (resp.json ?? resp.raw ?? payload);
+                const prettyJson = JSON.stringify(preferred, null, 2);
+                incomingMessageDiv.classList.remove("loading");
+                textElement.innerText = prettyJson;
+                isResponseGenerating = false;
+                chatContainer.scrollTo(0, chatContainer.scrollHeight);
+            } else if (jsonData.response) {
+                // Fallback formato vecchio
+                const botResponse = jsonData.response || "No response received from the AI.";
+                incomingMessageDiv.classList.remove("loading");
+                textElement.innerText = botResponse;
+                isResponseGenerating = false;
+                chatContainer.scrollTo(0, chatContainer.scrollHeight);
+            } else {
+                throw new Error("Invalid response format from server");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            textElement.innerText = "Sorry, there was an error communicating with the AI. Please try again.";
+            isResponseGenerating = false;
+        }
+    };
+
+    // Show predefined response - with 1-second delay (fallback)
     const showPredefinedResponse = (incomingMessageDiv, textElement) => {
         setTimeout(() => {
             const normalizedUserMessage = userMessage.toLowerCase().trim();
@@ -150,7 +199,7 @@
     // Show a loading animation while waiting for the API response
     const showLoadingAnimation = () => {
         const html = `<div class="message-content">
-                        <img class="avatar" src="images/gemini.svg" alt="Gemini avatar">
+                        <img class="avatar" src="/static/images/chat.png" alt="Chat avatar">
                         <p class="text"></p>
                         <div class="loading-indicator">
                             <div class="loading-bar"></div>
@@ -164,7 +213,8 @@
         chatContainer.scrollTo(0, chatContainer.scrollHeight);
         const textElement = incomingMessageDiv.querySelector(".text");
 
-        showPredefinedResponse(incomingMessageDiv, textElement);
+        // Use Flask backend to get response
+        fetchBotResponse(incomingMessageDiv, textElement);
     };
 
     // Copy message text to the clipboard
@@ -183,7 +233,7 @@
         isResponseGenerating = true;
 
         const html = `<div class="message-content">
-                        <img class="avatar" src="images/user.jpg" alt="User avatar">
+                        <img class="avatar" src="/static/images/user.png" alt="User avatar">
                         <p class="text"></p>
                       </div>`;
         const outgoingMessageDiv = createMessageElement(html, "outgoing");

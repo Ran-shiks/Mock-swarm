@@ -1,0 +1,115 @@
+Documentazione dei Test – Mock JSON Generator
+1. Tipologia di test
+
+Il sistema di test implementato rientra nella categoria di black-box testing applicato a sistemi LLM-based.
+
+Black-box perché il modello linguistico viene valutato esclusivamente in base agli input forniti (prompt) e agli output prodotti, senza alcuna assunzione sull’architettura interna del modello.
+
+Funzionale e contrattuale perché i test verificano il rispetto di vincoli formali (output JSON valido, struttura corretta, assenza di testo extra).
+
+Deterministico + LLM-assisted:
+
+i vincoli strutturali sono verificati in modo deterministico (parsing JSON, schema, cardinalità, profondità),
+
+la coerenza semantica è valutata tramite metriche LLM-based.
+
+Questo approccio è particolarmente adatto a generatori di dati mock, dove la correttezza sintattica e strutturale è più rilevante della “creatività” del testo.
+
+2. Scopo del test
+
+L’obiettivo dei test è validare che il chatbot:
+
+Risponda esclusivamente con JSON valido
+
+nessun testo descrittivo,
+
+nessun markdown,
+
+nessun backtick.
+
+Produca dati coerenti con il prompt
+
+utenti e-commerce,
+
+payload ordini,
+
+errori HTTP,
+
+JSON annidati,
+
+dati IoT,
+
+prompt “trappola” (ok=true).
+
+Mantenga il contratto JSON-only anche in sessioni multi-turno.
+
+Ogni caso di test rappresenta un use case reale di testing software (backend, frontend, API, IoT).
+
+3. Struttura dei test
+
+I test sono organizzati in 6 casi indipendenti, uno per ciascun scenario, più un test aggiuntivo multi-turn:
+
+Test	Scenario
+Test 01	Utente e-commerce
+Test 02	Payload POST /orders
+Test 03	Errore HTTP 403
+Test 04	JSON profondamente annidato
+Test 05	Dati sensori IoT (10 record)
+Test 06	Prompt “trappola” (ok=true)
+Test 07	Sessione multi-turn JSON-only
+
+Ogni test segue lo stesso flusso:
+
+Invio del prompt all’endpoint /ai
+
+Verifica hard contract JSON
+
+Verifica schema/struttura
+
+Valutazione semantica tramite DeepEval
+
+4. Cos’è DeepEval e come viene usato
+
+DeepEval è un framework open-source per la valutazione di sistemi basati su Large Language Models (LLM).
+
+In questo progetto DeepEval viene utilizzato come:
+
+giudice semantico (LLM-as-a-judge),
+
+eseguito localmente tramite Ollama (modello llama3),
+
+con metriche a soglia controllata.
+
+Metrica utilizzata
+
+Answer Relevancy Metric
+
+verifica che l’output sia semanticamente coerente con il prompt,
+
+usata come segnale soft, non come unico criterio di validazione.
+
+Le metriche di hallucination sono state volutamente escluse, poiché poco adatte a contesti di generazione strutturata di dati mock.
+
+5. Perché questo approccio è corretto
+
+Evita falsi negativi tipici delle valutazioni puramente LLM-based.
+
+Garantisce riproducibilità e affidabilità dei test.
+
+Separa chiaramente:
+
+contratto formale (JSON, schema),
+
+qualità semantica (DeepEval).
+
+È facilmente estendibile con:
+
+validazione JSON Schema,
+
+custom DeepEval metrics,
+
+golden datasets.
+
+6. Conclusione
+
+Questo sistema di test fornisce una valutazione solida, ripetibile e realistica di un chatbot progettato come generatore universale di dati mock per test software, combinando controlli deterministici e valutazione semantica assistita da LLM.
