@@ -14,7 +14,11 @@ class DataExporter:
         if isinstance(value, bool): return "TRUE" if value else "FALSE"
         if isinstance(value, (int, float)): return str(value)
         # Escape delle virgolette singole per SQL standard
-        if isinstance(value, str): return f"'{value.replace("'", "''")}'"
+        #if isinstance(value, str): return f"'{value.replace("'", "''")}'"
+        if isinstance(value, str):
+            # Usiamo una variabile temporanea per evitare conflitti di virgolette in Python < 3.12
+            safe_value = value.replace("'", "''")
+            return f"'{safe_value}'"
         return f"'{json.dumps(value)}'"
 
     # --- IMPLEMENTAZIONI SPECIFICHE ---
