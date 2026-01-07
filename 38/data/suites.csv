@@ -1,0 +1,181 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","1","test_clean_files_exists","tests.tests_static_generator.utils","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_utils","",""
+"","1","test_export_ndjson_partial_failure","tests.tests_static_generator.exporter","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_exporter","",""
+"
+    Test the happy path for the `generate` method of the `MockEngine` class.
+
+    This test verifies that the `generate` method:
+    - Returns a list of records.
+    - Produces the correct number of records as specified by the input.
+    - Ensures each record in the list is a dictionary.
+
+    Preconditions:
+    - A valid schema file (""valid_schema.json"") must exist at the specified schema path.
+
+    Assertions:
+    - The returned value is a list.
+    - The length of the list matches the requested number of records.
+    - Each item in the list is a dictionary.
+    ","2","test_generate_happy_path","tests.tests_static_generator.engine","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_engine","",""
+"Copre riga 29: Errore se non si passa nulla al costruttore.","1","test_TC_MISSING_01_init_senza_argomenti","tests.tests_static_generator.schema_parser","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_schema_parser","",""
+"","1","test_parse_args_no_short_flags","tests.tests_static_generator.cli_parser","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_cli_parser","",""
+"","1","test_export_sql_unsafe_keys","tests.tests_static_generator.exporter","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_exporter","",""
+"","0","test_export_json","tests.tests_static_generator.exporter","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_exporter","",""
+"","2","test_main_execution_flow","tests.tests_static_generator.main_cli","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_main_cli","",""
+"
+    Obiettivo: Verificare il flusso 'Happy Path' quando l'utente vuole l'output a video (stdout).
+    Verifica che il Controller orchestrino Engine ed Exporter senza toccare il disco.
+    ","2","test_controller_stdout_happy_path","tests.tests_static_generator.controller","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_controller","",""
+"","1","test_choice_generator_wect_valido","tests.tests_static_generator.algorithmic","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_algorithmic","",""
+"","0","test_tipo_non_supportato_errore","tests.tests_static_generator.algorithmic","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_algorithmic","",""
+"","1","test_TC_003_errore_file_non_esistente","tests.tests_static_generator.schema_parser","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_schema_parser","",""
+"","1","test_parse_args_unknown_flag","tests.tests_static_generator.cli_parser","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_cli_parser","",""
+"","0","test_float_generator_bva_massimo_piu_1","tests.tests_static_generator.algorithmic","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_algorithmic","",""
+"","0","test_export_invalid_format","tests.tests_static_generator.exporter","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_exporter","",""
+"","2","test_generate_typical_records","tests.tests_static_generator.engine","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_engine","",""
+"","0","test_string_generator_non_supportato","tests.tests_static_generator.algorithmic","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_algorithmic","",""
+"","1","test_parse_args_repeated_arguments","tests.tests_static_generator.cli_parser","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_cli_parser","",""
+"","1","test_parse_args_help","tests.tests_static_generator.cli_parser","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_cli_parser","",""
+"","0","test_export_sql_nasty_string","tests.tests_static_generator.exporter","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_exporter","",""
+"","0","test_create_temp_schema","tests.tests_static_generator.utils","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_utils","",""
+"","0","test_main_missing_args_attribute","tests.tests_static_generator.main_cli","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_main_cli","",""
+"","1","test_export_sql_default_tablename","tests.tests_static_generator.exporter","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_exporter","",""
+"","0","test_input_non_dizionario_errore","tests.tests_static_generator.algorithmic","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_algorithmic","",""
+"","1","test_generate_non_numeric_n[bad_n3]","tests.tests_static_generator.engine","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_engine","",""
+"","0","test_run_cli_capture_stderr","tests.tests_static_generator.utils","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_utils","",""
+"","0","test_clean_files_boundary_empty_list","tests.tests_static_generator.utils","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_utils","",""
+"","2","test_generate_non_numeric_n[bad_n2]","tests.tests_static_generator.engine","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_engine","",""
+"
+    Testa che se la rimozione del file temporaneo fallisce (OSError),
+    la funzione lo ignori silenziosamente (pass) senza crashare.
+    ","2","test_generate_data_cleanup_handles_oserror","tests.tests_static_generator.utils","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_utils","",""
+"","1","test_string_generator_address","tests.tests_static_generator.algorithmic","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_algorithmic","",""
+"","0","test_object_generator_wect_valido","tests.tests_static_generator.algorithmic","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_algorithmic","",""
+"","1","test_run_cli_boundary_empty_string","tests.tests_static_generator.utils","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_utils","",""
+"","1","test_clean_files_oserror","tests.tests_static_generator.utils","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_utils","",""
+"","0","test_export_unicode_support","tests.tests_static_generator.exporter","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_exporter","",""
+"","0","test_proprieta_mancante_type_errore","tests.tests_static_generator.algorithmic","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_algorithmic","",""
+"","4","test_TC_008_bva_massimo_piu_1","tests.tests_static_generator.schema_parser","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_schema_parser","",""
+"","1","test_parse_args_boundary_empty_string_out","tests.tests_static_generator.cli_parser","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_cli_parser","",""
+"","1","test_clean_files_input_none","tests.tests_static_generator.utils","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_utils","",""
+"","3","test_TC_010_happy_path","tests.tests_static_generator.schema_parser","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_schema_parser","",""
+"","2","test_generate_non_numeric_n[3.14]","tests.tests_static_generator.engine","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_engine","",""
+"","0","test_create_temp_schema_boundary_empty_dict","tests.tests_static_generator.utils","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_utils","",""
+"
+    Obiettivo: Verificare la gestione dell'output su file.
+    Copre entrambi i rami logici:
+    1. Creazione cartella padre se necessaria.
+    2. Apertura/Chiusura file.
+    ","4","test_controller_file_output_logic[data.json-False]","tests.tests_static_generator.controller","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_controller","",""
+"","1","test_generate_data_empty_results","tests.tests_static_generator.utils","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_utils","",""
+"","1","test_parse_args_equals_syntax","tests.tests_static_generator.cli_parser","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_cli_parser","",""
+"","0","test_load_json_malformed","tests.tests_static_generator.utils","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_utils","",""
+"","0","test_array_generator_wect_valido","tests.tests_static_generator.algorithmic","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_algorithmic","",""
+"","0","test_export_sql_complex_types","tests.tests_static_generator.exporter","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_exporter","",""
+"","0","test_array_generator_bva_massimo","tests.tests_static_generator.algorithmic","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_algorithmic","",""
+"","2","test_main_verbose_logging","tests.tests_static_generator.main_cli","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_main_cli","",""
+"
+    White Box: Verifica che passando un seed, l'output sia deterministico
+    (ovvero identico se rieseguito), coprendo il ramo 'if seed is not None'.
+    ","4","test_generate_determinism_with_seed","tests.tests_static_generator.engine","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_engine","",""
+"","0","test_parse_args_sys_argv_default","tests.tests_static_generator.cli_parser","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_cli_parser","",""
+"","0","test_prepare_output_dir_recreates","tests.tests_static_generator.utils","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_utils","",""
+"","1","test_run_cli_command_construction","tests.tests_static_generator.utils","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_utils","",""
+"","1","test_parse_args_invalid_type_int","tests.tests_static_generator.cli_parser","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_cli_parser","",""
+"","1","test_parse_args_invalid_choice_format","tests.tests_static_generator.cli_parser","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_cli_parser","",""
+"","0","test_generate_missing_schema","tests.tests_static_generator.engine","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_engine","",""
+"","0","test_float_generator_happy_path","tests.tests_static_generator.algorithmic","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_algorithmic","",""
+"","1","test_parse_args_valid_formats[csv]","tests.tests_static_generator.cli_parser","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_cli_parser","",""
+"","2","test_main_catch_specific_exception","tests.tests_static_generator.main_cli","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_main_cli","",""
+"Copre riga 63: Cattura eccezione generica durante validate_schema.","1","test_TC_MISSING_07_errore_generico_validazione","tests.tests_static_generator.schema_parser","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_schema_parser","",""
+"","24","test_clean_files_boundary_large_list","tests.tests_static_generator.utils","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_utils","",""
+"
+    Obiettivo: Verificare che il file venga chiuso correttamente (nel blocco finally)
+    anche se si verifica un errore durante l'esportazione (es. disco pieno).
+    ","4","test_controller_export_error_cleanup","tests.tests_static_generator.controller","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_controller","",""
+"","0","test_parse_args_table_name_with_json","tests.tests_static_generator.cli_parser","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_cli_parser","",""
+"","1","test_generate_zero_records","tests.tests_static_generator.engine","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_engine","",""
+"","1","test_generate_none_n","tests.tests_static_generator.engine","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_engine","",""
+"
+    Obiettivo: Verificare che se l'Engine fallisce (es. schema invalido),
+    l'eccezione venga propagata e il processo si interrompa prima dell'export.
+    ","2","test_controller_engine_error_propagation","tests.tests_static_generator.controller","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_controller","",""
+"","2","test_generate_non_numeric_n[dieci]","tests.tests_static_generator.engine","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_engine","",""
+"","3","test_TC_005_bva_minimo","tests.tests_static_generator.schema_parser","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_schema_parser","",""
+"","1","test_parse_args_boundary_int_values","tests.tests_static_generator.cli_parser","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_cli_parser","",""
+"","1","test_TC_004_errore_file_non_json","tests.tests_static_generator.schema_parser","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_schema_parser","",""
+"Copre righe 47, 49, 51: Controlli su 'type' e 'properties'.","1","test_TC_MISSING_03_schema_struttura_errata","tests.tests_static_generator.schema_parser","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_schema_parser","",""
+"","1","test_array_generator_bva_minimo","tests.tests_static_generator.algorithmic","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_algorithmic","",""
+"
+    Copre la riga 51: Gestione eccezione se il generatore Faker non esiste.
+    Deve catturare l'AttributeError e fare fallback su fake.word().
+    ","0","test_string_generator_fallback_on_attribute_error","tests.tests_static_generator.algorithmic","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_algorithmic","",""
+"","1","test_load_json_boundary_empty_file","tests.tests_static_generator.utils","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_utils","",""
+"","1","test_parse_args_valid_formats[ndjson]","tests.tests_static_generator.cli_parser","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_cli_parser","",""
+"
+         Obiettivo: Verificare che se il generatore interno lancia un'eccezione
+         (es. tipo non gestito logicamente, anche se lo schema è valido),
+         l'engine NON crashi ma metta None nel campo.
+         ","2","test_generate_unsupported_type","tests.tests_static_generator.engine","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_engine","",""
+"","0","test_export_json_circular_reference","tests.tests_static_generator.exporter","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_exporter","",""
+"","0","test_export_stream_error","tests.tests_static_generator.exporter","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_exporter","",""
+"
+    Copre la riga 74: Correzione automatica se max_items < min_items.
+    ","0","test_array_generator_fix_inverted_min_max","tests.tests_static_generator.algorithmic","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_algorithmic","",""
+"","19","test_generate_max_records","tests.tests_static_generator.engine","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_engine","",""
+"","1","test_main_logging_setup_failure","tests.tests_static_generator.main_cli","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_main_cli","",""
+"","0","test_float_generator_bva_minimo","tests.tests_static_generator.algorithmic","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_algorithmic","",""
+"","4","test_TC_002_wect_non_valido","tests.tests_static_generator.schema_parser","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_schema_parser","",""
+"","0","test_string_generator_city","tests.tests_static_generator.algorithmic","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_algorithmic","",""
+"","0","test_parse_args_full_override","tests.tests_static_generator.cli_parser","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_cli_parser","",""
+"","3","test_TC_001_wect_valido","tests.tests_static_generator.schema_parser","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_schema_parser","",""
+"","0","test_export_json_invalid_type","tests.tests_static_generator.exporter","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_exporter","",""
+"","0","test_parse_args_valid_formats[json]","tests.tests_static_generator.cli_parser","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_cli_parser","",""
+"","0","test_main_propagates_system_exit","tests.tests_static_generator.main_cli","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_main_cli","",""
+"","0","test_export_sql_basic","tests.tests_static_generator.exporter","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_exporter","",""
+"","0","test_export_csv_missing_keys","tests.tests_static_generator.exporter","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_exporter","",""
+"","2","test_main_handle_critical_error","tests.tests_static_generator.main_cli","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_main_cli","",""
+"","0","test_float_generator_bva_minimo_meno_1","tests.tests_static_generator.algorithmic","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_algorithmic","",""
+"","0","test_export_sql_json_column","tests.tests_static_generator.exporter","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_exporter","",""
+"","0","test_array_generator_happy_path","tests.tests_static_generator.algorithmic","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_algorithmic","",""
+"","0","test_choice_generator_wect_non_valido","tests.tests_static_generator.algorithmic","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_algorithmic","",""
+"","1","test_uuid_generator_wect_valido","tests.tests_static_generator.algorithmic","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_algorithmic","",""
+"","2","test_generate_single_record_valid_schema","tests.tests_static_generator.engine","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_engine","",""
+"","0","test_export_ndjson","tests.tests_static_generator.exporter","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_exporter","",""
+"","2","test_parse_args_missing_schema","tests.tests_static_generator.cli_parser","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_cli_parser","",""
+"Copre righe 120, 123: Uso di __enter__ e __exit__.","1","test_TC_MISSING_05_context_manager","tests.tests_static_generator.schema_parser","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_schema_parser","",""
+"","0","test_load_json_file_valid","tests.tests_static_generator.utils","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_utils","",""
+"","0","test_export_csv_escaping","tests.tests_static_generator.exporter","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_exporter","",""
+"
+    Copre le righe 38, 40, 42, 44: Gestione formati email, date, ipv4, uri.
+    ","10","test_string_generator_formats_extended","tests.tests_static_generator.algorithmic","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_algorithmic","",""
+"","0","test_object_generator_wect_non_valido","tests.tests_static_generator.algorithmic","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_algorithmic","",""
+"","0","test_clean_files_not_exists","tests.tests_static_generator.utils","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_utils","",""
+"Copre riga 37: Lo schema deve essere un dict.","0","test_TC_MISSING_02_schema_non_dizionario","tests.tests_static_generator.schema_parser","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_schema_parser","",""
+"","0","test_export_empty_list","tests.tests_static_generator.exporter","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_exporter","",""
+"","18","test_generate_max_plus_one_records","tests.tests_static_generator.engine","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_engine","",""
+"","0","test_export_sql_invalid_column_syntax","tests.tests_static_generator.exporter","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_exporter","",""
+"","0","test_export_csv","tests.tests_static_generator.exporter","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_exporter","",""
+"Copre riga 53: 'required' deve essere una lista.","0","test_TC_MISSING_04_required_non_lista","tests.tests_static_generator.schema_parser","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_schema_parser","",""
+"Copre riga 130: Metodo factory from_dict.","0","test_TC_MISSING_06_from_dict","tests.tests_static_generator.schema_parser","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_schema_parser","",""
+"","3","test_TC_009_errore_tipo_dato","tests.tests_static_generator.schema_parser","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_schema_parser","",""
+"
+    Copre le righe 93-94: Generazione array di tipi complessi (es. interi),
+    non semplici stringhe da lista opzioni.
+    ","1","test_array_generator_complex_item_type","tests.tests_static_generator.algorithmic","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_algorithmic","",""
+"","0","test_export_csv_inconsistent_schema","tests.tests_static_generator.exporter","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_exporter","",""
+"","1","test_generate_negative_records","tests.tests_static_generator.engine","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_engine","",""
+"","1","test_parse_args_valid_formats[sql]","tests.tests_static_generator.cli_parser","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_cli_parser","",""
+"","1","test_generate_malformed_schema","tests.tests_static_generator.engine","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_engine","",""
+"","57","test_generate_data_happy_path","tests.tests_static_generator.utils","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_utils","",""
+"","3","test_TC_007_bva_massimo","tests.tests_static_generator.schema_parser","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_schema_parser","",""
+"","1","test_parse_args_minimal","tests.tests_static_generator.cli_parser","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_cli_parser","",""
+"","2","test_generate_data_cleanup_on_error","tests.tests_static_generator.utils","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_utils","",""
+"","3","test_TC_006_bva_minimo_meno_1","tests.tests_static_generator.schema_parser","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_schema_parser","",""
+"","1","test_float_generator_bva_massimo","tests.tests_static_generator.algorithmic","Wed Jan 07 14:42:48 UTC 2026","passed","Wed Jan 07 14:42:48 UTC 2026","","test_algorithmic","",""
+"
+    Obiettivo: Verificare la gestione dell'output su file.
+    Copre entrambi i rami logici:
+    1. Creazione cartella padre se necessaria.
+    2. Apertura/Chiusura file.
+    ","4","test_controller_file_output_logic[output/subdir/data.json-True]","tests.tests_static_generator.controller","Wed Jan 07 14:42:49 UTC 2026","passed","Wed Jan 07 14:42:49 UTC 2026","","test_controller","",""
