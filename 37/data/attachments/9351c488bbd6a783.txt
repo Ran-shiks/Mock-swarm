@@ -1,0 +1,1 @@
+ERROR    src.static_generator.controller:controller.py:29 Errore durante la generazione: Schema JSON corrotto
