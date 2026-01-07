@@ -102,3 +102,28 @@ def test_generate_unsupported_type():
     with pytest.raises(Exception):
         engine = MockEngine(schema_path("unsupported_type_schema.json"))
         engine.generate(1)
+
+# AGGIUNTO DOPO LA MODIFICA DI MOCK ENGINE(SEED)
+# TC-013: White Box - Generazione Deterministica con Seed
+def test_generate_determinism_with_seed():
+    """
+    White Box: Verifica che passando un seed, l'output sia deterministico
+    (ovvero identico se rieseguito), coprendo il ramo 'if seed is not None'.
+    """
+    schema = schema_path("valid_schema.json")
+
+    # Istanza 1 con seed 42
+    engine1 = MockEngine(schema, seed=42)
+    result1 = engine1.generate(1)
+
+    # Istanza 2 con seed 42
+    engine2 = MockEngine(schema, seed=42)
+    result2 = engine2.generate(1)
+
+    # Istanza 3 con seed DIVERSO
+    engine3 = MockEngine(schema, seed=999)
+    result3 = engine3.generate(1)
+
+    # Verifica White Box
+    assert result1 == result2, "Con lo stesso seed, l'output DEVE essere identico"
+    assert result1 != result3, "Con seed diversi, l'output DOVREBBE essere diverso"

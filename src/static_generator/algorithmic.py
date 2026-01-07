@@ -32,6 +32,17 @@ class FloatGenerator(FieldGenerator):
 class StringGenerator(FieldGenerator):
     """Generatore per stringhe, con supporto a vari tipi tramite Faker."""
     def generate(self) -> str:
+        # 1. Gestione standard JSON Schema "format"
+        fmt = self.props.get("format")
+        if fmt == "email":
+            return fake.email()
+        elif fmt == "date":
+            return fake.date()
+        elif fmt == "ipv4":
+            return fake.ipv4()
+        elif fmt == "uri":
+            return fake.uri()
+
         gen = self.props.get("generator")
         if gen:
             # Supporto dinamico per generatori faker
@@ -57,12 +68,27 @@ class ArrayGenerator(FieldGenerator):
     def generate(self) -> list:
         min_items = self.props.get("min_items", 1)
         max_items = self.props.get("max_items", 5)
+
+        # Assicura che max non sia minore di min
+        if max_items < min_items:
+            max_items = min_items
+
         n = random.randint(min_items, max_items)
         item_type = self.props.get("item_type")
         item_options = self.props.get("item_options", [])
         result = []
         if item_type == "string" and item_options:
             result = random.sample(item_options, k=n)
+        # Caso generico: Usiamo la factory per creare gli item
+        # Questo è molto più potente: permette array di oggetti, di interi, etc.
+        elif item_type:
+            # Creiamo una "property" fittizia per l'item
+            item_props = {"type": item_type}
+            # Passiamo eventuali altre proprietà dell'item se presenti nello schema
+
+            generator = get_generator("item", item_props)
+            for _ in range(n):
+                result.append(generator.generate())
         else:
             for _ in range(n):
                 result.append(fake.word())
@@ -76,29 +102,20 @@ class IntegerGenerator(FieldGenerator):
         return random.randint(min_v, max_v)
 
 def get_generator(field_name: str, field_props: dict) -> FieldGenerator:
-    """
-    Factory per generatori in base al tipo di campo.
-    """
+    """Factory per ottenere il generatore corretto in base al tipo di campo."""
     t = field_props.get("type")
-    if t == "uuid":
-        return UUIDGenerator(field_name, field_props)
-    elif t == "choice":
-        return ChoiceGenerator(field_name, field_props)
-    elif t == "float":
-        return FloatGenerator(field_name, field_props)
-    elif t == "integer":
-        return IntegerGenerator(field_name, field_props)
-    elif t == "string":
-        return StringGenerator(field_name, field_props)
-    elif t == "object":
-        return ObjectGenerator(field_name, field_props)
-    elif t == "array":
-        return ArrayGenerator(field_name, field_props)
-    elif t == "string":
-        return StringGenerator(field_name, field_props)
-    elif t == "object":
-        return ObjectGenerator(field_name, field_props)
-    elif t == "array":
-        return ArrayGenerator(field_name, field_props)
-    else:
-        raise ValueError(f"Tipo non supportato: {t}")
+    # Mapping diretto
+    generators_map = {
+        "uuid": UUIDGenerator,
+        "choice": ChoiceGenerator,
+        "float": FloatGenerator,
+        "integer": IntegerGenerator,
+        "string": StringGenerator,
+        "object": ObjectGenerator,
+        "array": ArrayGenerator
+    }
+    gen_class = generators_map.get(t)
+    if gen_class:
+        return gen_class(field_name, field_props)
+
+    raise ValueError(f"Tipo non supportato: {t}")

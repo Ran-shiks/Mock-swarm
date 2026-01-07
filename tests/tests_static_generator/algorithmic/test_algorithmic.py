@@ -114,3 +114,66 @@ def test_array_generator_happy_path():
     assert 1 <= len(value) <= 2
     for v in value:
         assert v in ["A", "B"]
+
+
+# AGGIUNTI ALTRI TEST PER COPERTURA COMPLETA
+# ----------------------------------------------------------------------------------
+# Test Aggiuntivi per Copertura 100%
+# ----------------------------------------------------------------------------------
+
+# TIPO: WECT (Specific Formats coverage)
+def test_string_generator_formats_extended():
+    """
+    Copre le righe 38, 40, 42, 44: Gestione formati email, date, ipv4, uri.
+    """
+    formats = ["email", "date", "ipv4", "uri"]
+    for fmt in formats:
+        gen = get_generator("campo", {"type": "string", "format": fmt})
+        value = gen.generate()
+        assert isinstance(value, str)
+        assert len(value) > 0
+        if fmt == "email":
+            assert "@" in value
+        if fmt == "ipv4":
+            assert value.count(".") == 3
+
+
+# TIPO: Robustness (Fault Injection)
+def test_string_generator_fallback_on_attribute_error():
+    """
+    Copre la riga 51: Gestione eccezione se il generatore Faker non esiste.
+    Deve catturare l'AttributeError e fare fallback su fake.word().
+    """
+    gen = get_generator("campo", {"type": "string", "generator": "metodo_che_non_esiste_xyz"})
+    value = gen.generate()
+    # Se non crasha e restituisce una stringa, il fallback ha funzionato
+    assert isinstance(value, str)
+    assert len(value) > 0
+
+
+# TIPO: Robustness (Defensive Programming)
+def test_array_generator_fix_inverted_min_max():
+    """
+    Copre la riga 74: Correzione automatica se max_items < min_items.
+    """
+    # Impostiamo max a 1 e min a 5. Il codice deve forzare max=5.
+    gen = get_generator("arr", {"type": "array", "item_type": "string", "min_items": 5, "max_items": 1})
+    value = gen.generate()
+    assert isinstance(value, list)
+    assert len(value) == 5
+
+
+# TIPO: WECT (Recursive Generation)
+def test_array_generator_complex_item_type():
+    """
+    Copre le righe 93-94: Generazione array di tipi complessi (es. interi),
+    non semplici stringhe da lista opzioni.
+    """
+    # Chiediamo un array di interi
+    gen = get_generator("voti", {"type": "array", "item_type": "integer", "min_items": 3, "max_items": 3})
+    value = gen.generate()
+
+    assert isinstance(value, list)
+    assert len(value) == 3
+    # Verifica che gli elementi interni siano stati generati come interi
+    assert all(isinstance(x, int) for x in value)

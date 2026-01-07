@@ -1,0 +1,28 @@
+Scenario,Comando (PowerShell),Output Generato
+JSON Standard
+python -m src.static_generator.__main_cli__ --schema input.json --count 5 --out test_results/data.json --format json
+
+CSV (Excel)
+python -m src.static_generator.__main_cli__ --schema input.json --count 10 --out test_results/report.csv --format csv
+
+NDJSON (Stream)
+python -m src.static_generator.__main_cli__ --schema input.json --count 50 --out test_results/stream.ndjson --format ndjson
+
+SQL (Database)
+python -m src.static_generator.__main_cli__ --schema input.json --count 5 --out test_results/backup.sql --format sql --table-name UTENTI_DB
+
+Test Seed (Clone)
+python -m src.static_generator.__main_cli__ --schema input.json --count 1 --seed 12345 --out test_results/fixed.json --format json
+
+Solo Terminale
+python -m src.static_generator.__main_cli__ --schema input.json --count 3 --format json
+
+Eseguire intero snippet di codice con i comandi di test
+.\run_all_tests.ps1
+
+Test:
+Behave
+behave --tags="~@skip" --tags="~@wip"
+
+Pytest
+python -m pytest --cov=src --cov-config=pytest.ini --cov-report=term-missing
