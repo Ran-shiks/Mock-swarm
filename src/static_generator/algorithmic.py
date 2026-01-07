@@ -9,7 +9,8 @@ fake = Faker('it_IT')
 class UUIDGenerator(FieldGenerator):
     """Generatore per UUID."""
     def generate(self) -> str:
-        return str(uuid.uuid4())
+        #return str(uuid.uuid4())
+        return fake.uuid4()
 
 class ChoiceGenerator(FieldGenerator):
     """Generatore per scelta casuale da una lista di opzioni."""
@@ -30,27 +31,28 @@ class FloatGenerator(FieldGenerator):
         return round(value, dec)
 
 class StringGenerator(FieldGenerator):
-    """Generatore per stringhe, con supporto a vari tipi tramite Faker."""
+    """
+    Generatore per stringhe, con supporto dinamico completo a Faker.
+    Supporta sia i formati standard JSON Schema che i metodi diretti di Faker.
+    """
     def generate(self) -> str:
-        # 1. Gestione standard JSON Schema "format"
-        fmt = self.props.get("format")
-        if fmt == "email":
-            return fake.email()
-        elif fmt == "date":
-            return fake.date()
-        elif fmt == "ipv4":
-            return fake.ipv4()
-        elif fmt == "uri":
-            return fake.uri()
+        # 1. Recupera la chiave di formato
+        method_name = self.props.get("faker") or self.props.get("format") or self.props.get("generator")
 
-        gen = self.props.get("generator")
-        if gen:
-            # Supporto dinamico per generatori faker
+        # Fallback rapido se nullo
+        if not method_name:
+            return fake.word()
+
+        # 2. Dispatch Dinamico
+        if hasattr(fake, method_name):
             try:
-                faker_func = getattr(fake, gen)
-                return faker_func()
-            except AttributeError:
-                pass
+                faker_func = getattr(fake, method_name)
+                return str(faker_func())
+            except Exception:
+                # Fallback se il metodo Faker fallisce (es. argomenti mancanti)
+                return fake.word()
+
+        # 3. Fallback finale (metodo non trovato)
         return fake.word()
 
 class ObjectGenerator(FieldGenerator):
@@ -119,3 +121,4 @@ def get_generator(field_name: str, field_props: dict) -> FieldGenerator:
         return gen_class(field_name, field_props)
 
     raise ValueError(f"Tipo non supportato: {t}")
+
