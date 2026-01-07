@@ -1,2 +1,0 @@
-DEBUG: SmartGenerator invocato con provider openai
-DEBUG: Context: Test context
