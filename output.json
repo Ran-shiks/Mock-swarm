@@ -1,0 +1,20 @@
+[
+  {
+    "id": 81,
+    "nome": "avvenire",
+    "email": "pignattigionata@example.com",
+    "voto": null
+  },
+  {
+    "id": 94,
+    "nome": "istituto",
+    "email": "serafinabandello@example.net",
+    "voto": null
+  },
+  {
+    "id": 30,
+    "nome": "qualcuno",
+    "email": "bdonarelli@example.com",
+    "voto": null
+  }
+]

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MockSwarm · Drag & Drop</title>
+    <style>
+        :root {
+            --bg: #0e1117;
+            --panel: #161b22;
+            --border: #2d333b;
+            --text: #e6edf3;
+            --muted: #9ca3af;
+            --accent: #67e8f9;
+            --accent-2: #22c55e;
+            --error: #f97316;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Inter", system-ui, -apple-system, sans-serif; }
+        body { background: var(--bg); color: var(--text); padding: 24px; }
+        h1 { font-size: 24px; margin-bottom: 12px; }
+        p { color: var(--muted); margin-bottom: 16px; }
+        .layout { display: grid; grid-template-columns: 1.1fr 1fr; gap: 16px; align-items: start; }
+        .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+        .dropzone { border: 2px dashed var(--border); border-radius: 12px; padding: 16px; text-align: center; cursor: pointer; transition: border-color 0.15s ease, background 0.15s ease; min-height: 140px; display: grid; place-items: center; }
+        .dropzone.drag { border-color: var(--accent); background: rgba(103, 232, 249, 0.08); }
+        .controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+        button, input[type="number"] { border-radius: 10px; border: 1px solid var(--border); background: #1f242c; color: var(--text); padding: 10px 12px; cursor: pointer; }
+        button.primary { background: var(--accent); color: #0b1220; border: none; font-weight: 700; }
+        button.success { background: var(--accent-2); color: #0b1220; border: none; font-weight: 700; }
+        button:disabled { opacity: 0.6; cursor: not-allowed; }
+        select { border-radius: 10px; border: 1px solid var(--border); background: #1f242c; color: var(--text); padding: 10px 12px; }
+        .status { margin-top: 10px; font-size: 14px; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+        .status.ok { color: var(--accent-2); }
+        .status.err { color: var(--error); }
+        .badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border-radius: 999px; background: #1f2937; border: 1px solid var(--border); color: var(--text); font-size: 12px; }
+        .hidden { display: none; }
+        .output { margin-top: 12px; background: #0b0f15; border: 1px solid var(--border); border-radius: 10px; padding: 12px; min-height: 220px; white-space: pre-wrap; font-family: "JetBrains Mono", Consolas, monospace; font-size: 13px; overflow: auto; }
+        .row { display: flex; align-items: center; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+        label { color: var(--muted); font-size: 14px; }
+        input[type="file"] { display: none; }
+        @media (max-width: 960px) { .layout { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <h1>Carica uno schema JSON e genera mock</h1>
+    <p>Trascina il file, incolla dal clipboard o selezionalo. Poi salva e genera dati di prova.</p>
+
+    <div class="layout">
+        <div class="panel">
+            <div id="dropzone" class="dropzone">
+                <div>
+                    <strong>Trascina qui il file JSON</strong><br>
+                    <span style="color: var(--muted);">oppure clicca per selezionarlo (max 5MB)</span>
+                </div>
+            </div>
+            <input type="file" id="fileInput" accept="application/json">
+            <div class="controls">
+                <button id="browseBtn">Scegli file</button>
+                <button id="pasteBtn">Incolla da clipboard</button>
+                <button id="generateBtn" class="success">Genera mock</button>
+                <button id="downloadBtn" class="primary" disabled>Scarica</button>
+            </div>
+            <div class="row">
+                <label for="countInput">Record:</label>
+                <input type="number" id="countInput" min="1" max="500" value="3" style="width:90px;">
+                <label for="seedInput">Seed (facoltativo):</label>
+                <input type="number" id="seedInput" style="width:120px;">
+                <label for="formatSelect">Formato:</label>
+                <select id="formatSelect">
+                    <option value="json" selected>json</option>
+                    <option value="csv">csv</option>
+                    <option value="ndjson">ndjson</option>
+                    <option value="sql">sql</option>
+                </select>
+            </div>
+            <div class="status" id="statusText">In attesa di un file.<span id="sourceTag" class="badge hidden"></span></div>
+        </div>
+
+        <div class="panel">
+            <strong>Output</strong>
+            <div id="output" class="output">Nessun contenuto.</div>
+        </div>
+    </div>
+
+    <script>
+        const dropzone = document.getElementById('dropzone');
+        const fileInput = document.getElementById('fileInput');
+        const browseBtn = document.getElementById('browseBtn');
+        const pasteBtn = document.getElementById('pasteBtn');
+        const generateBtn = document.getElementById('generateBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const statusText = document.getElementById('statusText');
+        const sourceTag = document.getElementById('sourceTag');
+        const output = document.getElementById('output');
+        const countInput = document.getElementById('countInput');
+        const seedInput = document.getElementById('seedInput');
+        const formatSelect = document.getElementById('formatSelect');
+
+        let lastSchemaText = '';
+        let lastFileName = 'input.json';
+        let lastFileSize = null;
+        let lastGeneratedText = '';
+        let lastGeneratedFormat = 'json';
+        let lastSuggestedName = 'mock.json';
+
+        const setStatus = (msg, ok = false, err = false, sourceLabel = '') => {
+            statusText.className = 'status';
+            if (ok) statusText.classList.add('ok');
+            if (err) statusText.classList.add('err');
+            statusText.firstChild.nodeValue = msg;
+            if (sourceLabel) {
+                sourceTag.textContent = sourceLabel;
+                sourceTag.classList.remove('hidden');
+            } else {
+                sourceTag.classList.add('hidden');
+            }
+        };
+
+        const showOutput = (text) => {
+            output.textContent = text;
+        };
+
+        const formatBytes = (bytes) => {
+            if (!bytes && bytes !== 0) return '—';
+            const sizes = ['B','KB','MB','GB'];
+            if (bytes === 0) return '0 B';
+            const i = Math.floor(Math.log(bytes) / Math.log(1024));
+            return `${(bytes / Math.pow(1024, i)).toFixed(1)} ${sizes[i]}`;
+        };
+
+        const handleJSON = (rawText, fileName = 'clipboard', fileSize = null) => {
+            try {
+                const parsed = JSON.parse(rawText);
+                const pretty = JSON.stringify(parsed, null, 2);
+                lastSchemaText = rawText;
+                lastFileName = fileName || 'input.json';
+                lastFileSize = fileSize;
+                showOutput(pretty);
+                const srcLabel = fileName === 'clipboard' ? 'Incollato' : `File: ${lastFileName}`;
+                setStatus(`Schema valido`, true, false, srcLabel);
+                return true;
+            } catch (err) {
+                showOutput('Errore JSON: ' + err.message);
+                setStatus('Contenuto non valido. Correggi il JSON.', false, true, 'Errore');
+                return false;
+            }
+        };
+
+        const handleFile = (file) => {
+            if (!file) return;
+            if (file.size > 5 * 1024 * 1024) {
+                setStatus('Il file supera i 5MB. Riduci lo schema.', false, true);
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                handleJSON(e.target.result, file.name, file.size);
+            };
+            reader.readAsText(file);
+        };
+
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.classList.add('drag');
+        });
+        dropzone.addEventListener('dragleave', () => dropzone.classList.remove('drag'));
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.classList.remove('drag');
+            const file = e.dataTransfer.files[0];
+            handleFile(file);
+        });
+
+        dropzone.addEventListener('click', () => fileInput.click());
+        browseBtn.addEventListener('click', (e) => { e.preventDefault(); fileInput.click(); });
+        fileInput.addEventListener('change', (e) => { const file = e.target.files[0]; handleFile(file); });
+
+        pasteBtn.addEventListener('click', async () => {
+            try {
+                const text = await navigator.clipboard.readText();
+                if (!text) {
+                    setStatus('Clipboard vuota.', false, true);
+                    return;
+                }
+                handleJSON(text, 'clipboard');
+            } catch (err) {
+                setStatus('Permesso clipboard negato.', false, true);
+            }
+        });
+
+        downloadBtn.addEventListener('click', () => {
+            if (!lastGeneratedText) return;
+            const ext = lastGeneratedFormat;
+            const mimeMap = { json: 'application/json', csv: 'text/csv', ndjson: 'application/x-ndjson', sql: 'text/plain' };
+            const blob = new Blob([lastGeneratedText], { type: mimeMap[ext] || 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = lastSuggestedName || `mock.${ext}`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+        });
+
+        generateBtn.addEventListener('click', async () => {
+            if (!lastSchemaText) {
+                setStatus('Carica o incolla uno schema prima di generare.', false, true, 'Manca schema');
+                return;
+            }
+            const count = Math.max(1, Math.min(500, parseInt(countInput.value, 10) || 1));
+            const seedVal = seedInput.value === '' ? null : Number(seedInput.value);
+            const format = formatSelect.value || 'json';
+            try {
+                const response = await fetch('/api/schema/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ filename: lastFileName, content: lastSchemaText, count, seed: seedVal, format })
+                });
+                const result = await response.json();
+                if (!response.ok || !result.success) throw new Error(result.error || 'Errore sconosciuto');
+                const textOut = result.text || JSON.stringify(result.data, null, 2);
+                showOutput(textOut);
+                lastGeneratedText = textOut;
+                lastGeneratedFormat = format;
+                lastSuggestedName = result.filename || `mock.${format}`;
+                downloadBtn.disabled = false;
+                setStatus(`Mock generati (count=${count}, formato=${format})`, true, false);
+            } catch (err) {
+                setStatus('Generazione fallita: ' + err.message, false, true);
+            }
+        });
+    </script>
+</body>
+</html>
