@@ -1,7 +1,6 @@
 import os
 import json
-import pandas as pd
-from io import BytesIO
+import io
 from flask import Flask, render_template, request, jsonify, send_file, session
 import sys
 
@@ -9,6 +8,8 @@ import sys
 sys.path.insert(0, os.path.dirname(__file__))
 
 from llm.v2olama_chat import V2OlamaChat
+from static_generator.engine import MockEngine
+from static_generator.exporter import DataExporter
 
 
 DEFAULT_SYSTEM_PROMPT = (
@@ -32,6 +33,8 @@ app = Flask(__name__, template_folder=template_dir, static_folder=static_dir, st
 app.config["DEBUG"] = True
 app.config["PROPAGATE_EXCEPTIONS"] = True
 app.secret_key = os.getenv("SECRET_KEY", "dev-secret-key-change-in-production")
+UPLOAD_DIR = os.path.join(base_dir, "uploaded_schemas")
+os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 # -----------------------------------------------------------------
 # GESTIONE SESSIONI CHAT
@@ -54,6 +57,89 @@ def chat_page():
     """Pagina di chat."""
     return render_template("chat.html")
 
+@app.route("/drag-and-drop")
+def drag_and_drop_page():
+    """Pagina di drag and drop per JSON schema."""
+    return render_template("dragAndDrop.html")
+
+
+@app.route("/api/schema/upload", methods=["POST"])
+def upload_schema():
+    """Riceve un JSON schema e lo salva su disco."""
+    payload = request.get_json(silent=True) or {}
+    content = payload.get("content", "")
+    filename = payload.get("filename", "input.json")
+
+    if not content:
+        return jsonify({"success": False, "error": "Nessun contenuto fornito."}), 400
+
+    # Verifica JSON valido
+    try:
+        json.loads(content)
+    except Exception as exc:  # noqa: BLE001
+        return jsonify({"success": False, "error": f"JSON non valido: {exc}"}), 400
+
+    safe_name = os.path.basename(filename) or "input.json"
+    if not safe_name.endswith(".json"):
+        safe_name += ".json"
+
+    target_path = os.path.join(UPLOAD_DIR, safe_name)
+    with open(target_path, "w", encoding="utf-8") as f:
+        f.write(content)
+
+    return jsonify({"success": True, "path": target_path}), 200
+
+
+@app.route("/api/schema/generate", methods=["POST"])
+def generate_from_schema():
+    """Genera dati mock usando uno schema già caricato."""
+    payload = request.get_json(silent=True) or {}
+    filename = payload.get("filename", "input.json")
+    content = payload.get("content", "")
+    count = int(payload.get("count", 3) or 3)
+    seed = payload.get("seed")
+    format_type = payload.get("format", "json")
+    table_name = payload.get("table_name", "my_table")
+
+    # Usa contenuto inline (niente fetch dal server) se fornito
+    if content:
+        import tempfile
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False, encoding="utf-8") as tmp:
+            tmp.write(content)
+            schema_path = tmp.name
+    else:
+        safe_name = os.path.basename(filename) or "input.json"
+        if not safe_name.endswith(".json"):
+            safe_name += ".json"
+        schema_path = os.path.join(UPLOAD_DIR, safe_name)
+        if not os.path.exists(schema_path):
+            return jsonify({"success": False, "error": "Schema non trovato. Fornisci 'content' o carica il file."}), 404
+
+    try:
+        engine = MockEngine(schema_path=schema_path, seed=seed)
+        data = engine.generate(n=count)
+
+        # Esporta nel formato richiesto su buffer in memoria
+        buf = io.StringIO()
+        DataExporter.export(
+            data=data,
+            format_type=format_type,
+            output_stream=buf,
+            table_name=table_name,
+        )
+        text_out = buf.getvalue()
+        ext_map = {"json": "json", "csv": "csv", "ndjson": "ndjson", "sql": "sql"}
+        filename = f"mock.{ext_map.get(format_type, 'txt')}"
+
+        return jsonify({
+            "success": True,
+            "data": data,
+            "text": text_out,
+            "format": format_type,
+            "filename": filename,
+        }), 200
+    except Exception as exc:  # noqa: BLE001
+        return jsonify({"success": False, "error": str(exc)}), 500
 
 #   route per chat
 # -----------------------------------------------------------------

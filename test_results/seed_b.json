@@ -1,0 +1,32 @@
+[
+  {
+    "id": 53,
+    "nome": "ragazza",
+    "email": "mancinisilvia@example.com",
+    "voto": null
+  },
+  {
+    "id": 93,
+    "nome": "fino",
+    "email": "annunziata62@example.com",
+    "voto": null
+  },
+  {
+    "id": 1,
+    "nome": "croce",
+    "email": "jgulotta@example.net",
+    "voto": null
+  },
+  {
+    "id": 38,
+    "nome": "esso",
+    "email": "michelangeloburcardo@example.net",
+    "voto": null
+  },
+  {
+    "id": 47,
+    "nome": "quarto",
+    "email": "enricofo@example.net",
+    "voto": null
+  }
+]

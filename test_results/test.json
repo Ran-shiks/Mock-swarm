@@ -1,0 +1,32 @@
+[
+  {
+    "id": 97,
+    "nome": "raccogliere",
+    "email": "isabellamorandi@example.com",
+    "voto": null
+  },
+  {
+    "id": 9,
+    "nome": "salire",
+    "email": "marianamunari@example.com",
+    "voto": null
+  },
+  {
+    "id": 89,
+    "nome": "quindi",
+    "email": "loredanapisano@example.org",
+    "voto": null
+  },
+  {
+    "id": 94,
+    "nome": "anima",
+    "email": "jcugia@example.org",
+    "voto": null
+  },
+  {
+    "id": 6,
+    "nome": "iniziare",
+    "email": "oreste77@example.net",
+    "voto": null
+  }
+]
